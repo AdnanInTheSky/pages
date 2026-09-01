@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economic, Financial and Environmental Assessment, and Feasibility Studies | IP3 Consulting</title>
+
+    <!-- Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+
+    <!-- Unified Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            light: '#e8f5ed',
+                            DEFAULT: '#0F7645',
+                            dark: '#0a4f2e',
+                            900: '#052e1a',
+                        },
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'card': '0 10px 30px -5px rgba(0, 0, 0, 0.06)',
+                        'elevated': '0 20px 40px -10px rgba(0, 0, 0, 0.12)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        [x-cloak] { display: none !important; }
+
+        /* Glassmorphism Header */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        /* 3D Flip Card System */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .group:hover .group-hover\:rotate-y-180 { transform: rotateY(180deg); }
+        .card-flip-transition {
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 9999px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Card Hover Lift */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Text Balance */
+        .text-balance { text-wrap: balance; }
+
+        /* Fade in */
+        .animate-fade-in { animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 font-sans antialiased selection:bg-brand selection:text-white" x-data="{ mobileMenuOpen: false }">
+
+    <!-- Standardized Glass Navigation Bar -->
+    <nav class="glass-nav sticky top-0 z-50 border-b border-gray-200/70">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#" class="text-2xl font-extrabold tracking-tight text-gray-900 flex items-center gap-1.5">
+                <span>IP3</span><span class="text-brand">Consulting</span>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
+                <a href="#feasibility" class="hover:text-brand transition">Feasibility</a>
+                <a href="#expertise" class="hover:text-brand transition">Expertise</a>
+                <a href="#why" class="hover:text-brand transition">Why IP3</a>
+                <a href="#projects" class="hover:text-brand transition">Projects</a>
+                <a href="#why" class="bg-brand text-white px-5 py-2.5 rounded-full hover:bg-brand-dark transition shadow-sm font-semibold">Get Started</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden relative">
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-700 hover:text-brand focus:outline-none p-2" aria-label="Toggle navigation">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <div x-show="mobileMenuOpen" 
+                     @click.outside="mobileMenuOpen = false" 
+                     x-transition
+                     class="absolute top-12 right-0 w-60 bg-white border border-gray-100 rounded-2xl shadow-xl p-4 space-y-2 text-sm font-medium text-gray-700 z-50">
+                    <a href="#feasibility" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Feasibility</a>
+                    <a href="#expertise" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Expertise</a>
+                    <a href="#why" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Why IP3</a>
+                    <a href="#projects" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Projects</a>
+                    <a href="#why" class="block py-2.5 px-3 rounded-xl bg-brand text-white text-center font-semibold mt-2">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Standardized Hero Section -->
+    <section class="relative w-full min-h-[70vh] py-32 md:py-40 flex items-center justify-center overflow-hidden bg-gray-900">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=1920&q=80')] bg-cover bg-center"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/70 to-gray-900/90"></div>
+        
+        <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
+            <span class="text-xs font-bold text-green-300 uppercase tracking-widest bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full inline-block mb-6 border border-white/20">
+                IP3 Consulting
+            </span>
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white uppercase tracking-tight font-sans drop-shadow-2xl leading-tight text-balance mb-8">
+                Economic, Financial and Environmental Assessment, and <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-300 to-teal-200">Feasibility Studies</span>
+            </h1>
+            <div class="flex justify-center">
+                <a href="#feasibility" class="inline-flex items-center justify-center px-8 py-3.5 bg-brand text-white text-base font-semibold rounded-full hover:bg-brand-dark transition-all duration-200 shadow-elevated hover:scale-105">
+                    Explore Feasibility
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feasibility Section with 3-Image Alpine Slider -->
+    <section id="feasibility" class="py-24 bg-white border-b border-gray-200">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Project Viability</span>
+                <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4">
+                    Assessing Project Feasibility, <span class="text-brand">Economic and Environment Viability</span>
+                </h2>
+            </div>
+
+            <!-- Standardized Image Slider Component -->
+            <div x-data="imageSlider()" x-init="startAutoplay()"
+                 class="relative h-[340px] md:h-[460px] rounded-[2rem] overflow-hidden shadow-card border border-gray-200/80 bg-gray-900">
+
+                <template x-for="(slide, index) in slides" :key="index">
+                    <div class="absolute inset-0 transition-all duration-700 ease-in-out"
+                         :class="index === active ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'">
+                        <img :src="slide.img" :alt="slide.title" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-950/90 via-gray-950/30 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 p-8 md:p-12">
+                            <span class="bg-brand text-white text-xs font-bold uppercase tracking-widest px-3.5 py-1.5 rounded-full shadow-sm" x-text="slide.tag"></span>
+                            <h3 class="text-white text-2xl md:text-4xl font-bold tracking-tight mt-3 drop-shadow-md" x-text="slide.title"></h3>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Prev / Next Controls -->
+                <button @click="prev()" aria-label="Previous slide"
+                        class="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/80 backdrop-blur-md shadow-md border border-gray-200/80 hover:bg-white transition text-gray-800 focus:outline-none focus:ring-2 focus:ring-brand">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <button @click="next()" aria-label="Next slide"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/80 backdrop-blur-md shadow-md border border-gray-200/80 hover:bg-white transition text-gray-800 focus:outline-none focus:ring-2 focus:ring-brand">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+
+                <!-- Indicator Dots -->
+                <div class="absolute bottom-6 right-8 flex gap-2 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10">
+                    <template x-for="(slide, index) in slides" :key="'dot-' + index">
+                        <button @click="goTo(index)" class="h-2.5 rounded-full transition-all duration-300"
+                                :class="index === active ? 'w-7 bg-brand' : 'w-2.5 bg-white/60 hover:bg-white'"
+                                :aria-label="`Go to slide ${index + 1}`"></button>
+                    </template>
+                </div>
+            </div>
+
+            <p class="text-center max-w-3xl mx-auto mt-12 text-base md:text-lg text-gray-600 leading-relaxed">
+                We specialize in developing and assessing the integrated feasibility of the project concept that combine economic, financial, and environmental assessments. With expertise in economic modeling, financial analysis and environmental impact evaluation, we provide clients with the insights needed to make data-driven decisions on investment, project design, and implementation.
+            </p>
+        </div>
+    </section>
+
+    <!-- Our Expertise — Standardized Black Dashboard -->
+    <section id="expertise" class="relative py-24 bg-gray-900 overflow-hidden border-b border-gray-800"
+             style="background: url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=80') center/cover no-repeat fixed;">
+        <div class="absolute inset-0 bg-gray-950/90 backdrop-blur-sm"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-6" x-data="{ tab: 1 }">
+            <div class="text-center mb-16">
+                <span class="text-xs font-bold text-green-300 uppercase tracking-widest bg-white/10 px-3.5 py-1.5 rounded-full inline-block mb-3 border border-white/10">Methodology & Analytics</span>
+                <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4 drop-shadow-md">
+                    Our <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-300 to-teal-200">Expertise</span>
+                </h2>
+            </div>
+
+            <!-- Standardized Black Dashboard Container -->
+            <div class="flex flex-col lg:flex-row rounded-[2rem] overflow-hidden border border-gray-800 shadow-elevated bg-gray-900 min-h-[440px]">
+
+                <!-- Sidebar Tabs Navigation -->
+                <div class="w-full lg:w-1/3 bg-gray-900/95 border-b lg:border-b-0 lg:border-r border-gray-800 p-6 flex flex-col gap-3 z-10">
+                    <button @click="tab = 1"
+                            class="text-left px-5 py-4 rounded-xl font-semibold transition-all duration-200 flex items-center justify-between group text-sm md:text-base"
+                            :class="tab === 1 ? 'bg-brand text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white'">
+                        <span>Economic and Financial Feasibility</span>
+                        <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity hidden lg:block" :class="tab === 1 ? '!opacity-100 text-white' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                    <button @click="tab = 2"
+                            class="text-left px-5 py-4 rounded-xl font-semibold transition-all duration-200 flex items-center justify-between group text-sm md:text-base"
+                            :class="tab === 2 ? 'bg-brand text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white'">
+                        <span>Environmental Impact Assessments (EIA)</span>
+                        <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity hidden lg:block" :class="tab === 2 ? '!opacity-100 text-white' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                    <button @click="tab = 3"
+                            class="text-left px-5 py-4 rounded-xl font-semibold transition-all duration-200 flex items-center justify-between group text-sm md:text-base"
+                            :class="tab === 3 ? 'bg-brand text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white'">
+                        <span>Integrated Feasibility Frameworks</span>
+                        <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity hidden lg:block" :class="tab === 3 ? '!opacity-100 text-white' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Dashboard Content Panes -->
+                <div class="w-full lg:w-2/3 relative bg-gray-800/80 text-white p-8 lg:p-12 overflow-hidden flex items-center">
+
+                    <!-- Pane 1 -->
+                    <div x-show="tab === 1" x-cloak x-transition.opacity class="animate-fade-in w-full">
+                        <div class="aspect-video w-full rounded-2xl overflow-hidden mb-6 shadow-lg border border-gray-700 max-h-52">
+                            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80" alt="Financial Feasibility" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold text-white mb-6 border-b border-gray-700 pb-3">Economic and Financial Feasibility</h3>
+                        <ul class="space-y-4 text-gray-300 text-base md:text-lg">
+                            <li class="flex gap-3 items-start"><span class="text-brand font-bold text-lg leading-none">●</span> <span>Advanced economic and financial modeling for evaluating project viability and potential returns.</span></li>
+                            <li class="flex gap-3 items-start"><span class="text-brand font-bold text-lg leading-none">●</span> <span>Cost-benefit analysis and financial forecasting for public and private sector investments.</span></li>
+                            <li class="flex gap-3 items-start"><span class="text-brand font-bold text-lg leading-none">●</span> <span>Strategic financial planning, including long-term investment roadmaps and funding strategies.</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Pane 2 -->
+                    <div x-show="tab === 2" x-cloak x-transition.opacity class="animate-fade-in w-full">
+                        <div class="aspect-video w-full rounded-2xl overflow-hidden mb-6 shadow-lg border border-gray-700 max-h-52">
+                            <img src="https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=800&q=80" alt="Environmental Impact" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold text-white mb-6 border-b border-gray-700 pb-3">Environmental Impact Assessments (EIA)</h3>
+                        <ul class="space-y-4 text-gray-300 text-base md:text-lg">
+                            <li class="flex gap-3 items-start"><span class="text-brand font-bold text-lg leading-none">●</span> <span>In-depth analysis of environmental and social impacts to ensure compliance with sustainability and regulatory standards.</span></li>
+                            <li class="flex gap-3 items-start"><span class="text-brand font-bold text-lg leading-none">●</span> <span>Integration of climate resilience and green finance principles into project planning.</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Pane 3 -->
+                    <div x-show="tab === 3" x-cloak x-transition.opacity class="animate-fade-in w-full">
+                        <div class="aspect-video w-full rounded-2xl overflow-hidden mb-6 shadow-lg border border-gray-700 max-h-52">
+                            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80" alt="Integrated Frameworks" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold text-white mb-6 border-b border-gray-700 pb-3">Integrated Feasibility Frameworks</h3>
+                        <ul class="space-y-4 text-gray-300 text-base md:text-lg">
+                            <li class="flex gap-3 items-start"><span class="text-brand font-bold text-lg leading-none">●</span> <span>Development of holistic frameworks that combine institutional, economic, and environmental dimensions for large-scale projects.</span></li>
+                            <li class="flex gap-3 items-start"><span class="text-brand font-bold text-lg leading-none">●</span> <span>Focus on transformative solutions that balance economic growth with environmental stewardship.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why IP3 Section -->
+    <section id="why" class="bg-gray-900 py-24 relative overflow-hidden border-b border-gray-800">
+        <div class="absolute -top-24 -left-24 w-80 h-80 bg-brand/15 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-24 -right-24 w-80 h-80 bg-brand/15 rounded-full blur-3xl"></div>
+
+        <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
+            <span class="text-xs font-bold text-green-300 uppercase tracking-widest bg-white/10 px-3.5 py-1.5 rounded-full inline-block mb-4 border border-white/10">Value Proposition</span>
+            <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-white mb-8">
+                Why <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-300 to-teal-200">IP3 Consulting?</span>
+            </h2>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-6">
+                Our deep expertise in economic and financial modeling, combined with a commitment to environmental sustainability, positions us as the ideal partner for assessing project feasibility and driving sustainable growth. With a strong track record of delivering actionable solutions for large-scale infrastructure and transformative policy projects, IP3 Consulting ensures that your initiatives are economically viable, environmentally sustainable, and socially impactful.
+                <br><br>
+                Transform your vision into actionable outcomes. Contact us to explore how we can guide your projects toward sustainable success.
+            </p>
+            <div class="mt-10">
+                <a href="#projects" class="inline-flex items-center justify-center px-8 py-3.5 bg-brand text-white text-base font-semibold rounded-full hover:bg-brand-dark transition-all duration-200 shadow-elevated hover:scale-105">
+                    Get Started
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Assessment and Feasibility Studies — Standardized Apple Cards -->
+    <section id="projects" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Portfolio Track Record</span>
+                <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4">
+                    Assessment and <span class="text-brand">Feasibility Studies</span>
+                </h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Card 1 -->
+                <div class="group bg-white rounded-[2rem] overflow-hidden border border-gray-200/80 shadow-card flex flex-col card-hover">
+                    <div class="relative aspect-[16/10] overflow-hidden bg-gray-100">
+                        <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80" alt="Education feasibility study" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <span class="absolute top-4 left-4 bg-brand text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">2024</span>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <h3 class="font-bold text-xl text-gray-900 leading-snug group-hover:text-brand transition mb-3">Shaping the Future of Education: Feasibility Study for Secondary and Madrasah Education (2024)</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed flex-grow">IP3 Consulting conducted Bangladesh's first economic and financial feasibility study for secondary and madrasah education projects under ADB TA-6950-BAN. Our expertise in market analysis, cost-benefit assessment, risk modeling, and institutional capacity evaluation provided a comprehensive strategic roadmap for education sector investments, ensuring alignment with national development priorities and ADB guidelines to drive impactful, future-ready education.</p>
+                        <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <span class="inline-flex items-center gap-1.5 text-brand font-bold text-xs uppercase tracking-widest">
+                                Read More <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="group bg-white rounded-[2rem] overflow-hidden border border-gray-200/80 shadow-card flex flex-col card-hover">
+                    <div class="relative aspect-[16/10] overflow-hidden bg-gray-100">
+                        <img src="https://images.unsplash.com/photo-1578357078586-491adf1aa5ba?w=800&q=80" alt="Payra Seaport development" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <span class="absolute top-4 left-4 bg-brand text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">2017</span>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <h3 class="font-bold text-xl text-gray-900 leading-snug group-hover:text-brand transition mb-3">Strategic Economic and Financial Advisory for Payra Seaport Development (2017)</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed flex-grow">IP3 Consulting provided technical expertise in economic and financial feasibility analysis for Payra Seaport, Bangladesh's third seaport, under a detailed techno-economic study and master planning initiative. Our work included cost-benefit assessments, a 15-year financial model, and investment viability analysis, ensuring data-driven decision-making to optimize the port's long-term economic sustainability and strategic growth.</p>
+                        <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <span class="inline-flex items-center gap-1.5 text-brand font-bold text-xs uppercase tracking-widest">
+                                Read More <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="group bg-white rounded-[2rem] overflow-hidden border border-gray-200/80 shadow-card flex flex-col card-hover">
+                    <div class="relative aspect-[16/10] overflow-hidden bg-gray-100">
+                        <img src="https://images.unsplash.com/photo-1518001073206-621699099754?w=800&q=80" alt="Jolshiri Aqua Green City" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <span class="absolute top-4 left-4 bg-brand text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">2019</span>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <h3 class="font-bold text-xl text-gray-900 leading-snug group-hover:text-brand transition mb-3">Comprehensive Feasibility Study for Jolshiri Aqua Green City (2019)</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed flex-grow">IP3 Consulting conducted an economic, social, financial, and market feasibility study for Jolshiri Aqua Green City, a major Army Officers Housing Scheme development project in Bangladesh. Our work included a 10-year projection, cost-benefit analyses, financial modeling, and market segmentation, providing investment strategies, pricing models, and funding opportunities to ensure the project's long-term viability and sustainable urban growth.</p>
+                        <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <span class="inline-flex items-center gap-1.5 text-brand font-bold text-xs uppercase tracking-widest">
+                                Read More <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="group bg-white rounded-[2rem] overflow-hidden border border-gray-200/80 shadow-card flex flex-col card-hover">
+                    <div class="relative aspect-[16/10] overflow-hidden bg-gray-100">
+                        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80" alt="Special Economic Zone development" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <span class="absolute top-4 left-4 bg-brand text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">2017</span>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <h3 class="font-bold text-xl text-gray-900 leading-snug group-hover:text-brand transition mb-3">Strategic Advisory for Equity Investment & Special Economic Zone Development (2017)</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed flex-grow">IP3 Consulting provided technical coordination and advisory support to Bangladesh Infrastructure Finance Fund Limited (BIFFL) and Bangladesh Economic Zones Authority (BEZA) for the formulation of Equity Investment Policy and Special Purpose Company (SPC) structures. We collaborated with JICA and Japan Development Institute (JDI) to design an investment framework, shareholder agreements, and project structuring to strengthen Special Economic Zone (SEZ) development and financing strategies.</p>
+                        <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <span class="inline-flex items-center gap-1.5 text-brand font-bold text-xs uppercase tracking-widest">
+                                Read More <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="group bg-white rounded-[2rem] overflow-hidden border border-gray-200/80 shadow-card flex flex-col card-hover">
+                    <div class="relative aspect-[16/10] overflow-hidden bg-gray-100">
+                        <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&q=80" alt="Global LEAP clean energy financing" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <span class="absolute top-4 left-4 bg-brand text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">2015</span>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <h3 class="font-bold text-xl text-gray-900 leading-snug group-hover:text-brand transition mb-3">Global LEAP Clean Energy Financing & Market Development (2015)</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed flex-grow">IP3 Consulting led the design and implementation of a results-based financing strategy for the Global Lighting & Energy Access Partnership (Global LEAP), accelerating the adoption of off-grid solar home systems. Our work included market matchmaking, cost-benefit analysis, and a four-year M&E framework, bridging viability gaps for clean energy companies and fostering self-sustaining commercial markets for affordable, high-quality energy solutions.</p>
+                        <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <span class="inline-flex items-center gap-1.5 text-brand font-bold text-xs uppercase tracking-widest">
+                                Read More <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="group bg-white rounded-[2rem] overflow-hidden border border-gray-200/80 shadow-card flex flex-col card-hover">
+                    <div class="relative aspect-[16/10] overflow-hidden bg-gray-100">
+                        <img src="https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&q=80" alt="World Bank ESMAP and ASTAE evaluation" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <span class="absolute top-4 left-4 bg-brand text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">2016</span>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <h3 class="font-bold text-xl text-gray-900 leading-snug group-hover:text-brand transition mb-3">Evaluation of World Bank's ESMAP & ASTAE Programs (2016)</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed flex-grow">IP3 Consulting conducted a comprehensive financial, economic, and social impact evaluation of renewable energy projects under the World Bank's Energy Sector Management Assistance Program (ESMAP) and Asia Sustainable Alternative Energy Program (ASTAE) in Bangladesh and Nepal. Our assessment covered hydroelectric, biomass, wind, geothermal, and solar initiatives, analyzing cost-benefit performance, return on investment, poverty reduction, and economic growth impacts to shape future strategies in sustainable energy development and infrastructure.</p>
+                        <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <span class="inline-flex items-center gap-1.5 text-brand font-bold text-xs uppercase tracking-widest">
+                                Read More <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Standardized Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 py-12 text-center text-gray-400 text-sm">
+        <div class="max-w-7xl mx-auto px-6">
+            <p class="mb-2">© 2026 IP3 Consulting Limited — Institute for Public Policy and Practice. All rights reserved.</p>
+            <p class="text-gray-400 text-sm">
+                <span>Economic, Financial &amp; Environmental Feasibility Experts</span> | 
+                <a href="https://www.ip3-bd.org" class="text-green-400 hover:text-white transition">www.ip3-bd.org</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Alpine Image Slider Logic -->
+    <script>
+        function imageSlider() {
+            return {
+                active: 0,
+                timer: null,
+                slides: [
+                    {
+                        img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80',
+                        title: 'Scenario Analysis',
+                        tag: 'Data-Driven Insights'
+                    },
+                    {
+                        img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80',
+                        title: 'Comprehensive Feasibility',
+                        tag: 'Integrated Studies'
+                    },
+                    {
+                        img: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&q=80',
+                        title: 'Costs & Benefits',
+                        tag: 'Economic Evaluation'
+                    }
+                ],
+                startAutoplay() {
+                    this.timer = setInterval(() => this.next(), 2000);
+                },
+                next() { this.active = (this.active + 1) % this.slides.length; },
+                prev() { this.active = (this.active - 1 + this.slides.length) % this.slides.length; },
+                goTo(i) { this.active = i; }
+            };
+        }
+    </script>
+</body>
+</html>

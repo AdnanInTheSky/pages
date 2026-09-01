@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring, Evaluation, Research, Learning, and Adaptation (MERLA) | IP3 Consulting</title>
+    
+    <!-- Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Unified Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            light: '#e8f5ed',
+                            DEFAULT: '#0F7645',
+                            dark: '#0a4f2e',
+                            900: '#052e1a',
+                        },
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'card': '0 10px 30px -5px rgba(0, 0, 0, 0.06)',
+                        'elevated': '0 20px 40px -10px rgba(0, 0, 0, 0.12)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        [x-cloak] { display: none !important; }
+
+        /* Glassmorphism Header */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        /* 3D Flip Card System */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .group:hover .group-hover\:rotate-y-180 { transform: rotateY(180deg); }
+        .card-flip-transition {
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 9999px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Card Hover Lift */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Text Balance */
+        .text-balance { text-wrap: balance; }
+
+        /* Fade in */
+        .animate-fade-in { animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased selection:bg-brand selection:text-white" x-data="{ mobileMenuOpen: false }">
+
+    <!-- Standardized Glass Navigation Bar -->
+    <nav class="glass-nav sticky top-0 z-50 border-b border-gray-200/70">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#" class="text-2xl font-extrabold tracking-tight text-gray-900 flex items-center gap-1.5">
+                <span>IP3</span><span class="text-brand">Consulting</span>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
+                <a href="#" class="hover:text-brand transition">Home</a>
+                <a href="#" class="hover:text-brand transition">About Us</a>
+                <a href="#" class="hover:text-brand transition">Focus Areas</a>
+                <a href="#" class="hover:text-brand transition">Our Services</a>
+                <a href="#" class="hover:text-brand transition">IP3 People</a>
+                <a href="#offerings" class="bg-brand text-white px-5 py-2.5 rounded-full hover:bg-brand-dark transition shadow-sm font-semibold">Contact</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden relative">
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-700 hover:text-brand focus:outline-none p-2" aria-label="Toggle navigation">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <div x-show="mobileMenuOpen" 
+                     @click.outside="mobileMenuOpen = false" 
+                     x-transition
+                     class="absolute top-12 right-0 w-60 bg-white border border-gray-100 rounded-2xl shadow-xl p-4 space-y-2 text-sm font-medium text-gray-700 z-50">
+                    <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Home</a>
+                    <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">About Us</a>
+                    <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Focus Areas</a>
+                    <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Our Services</a>
+                    <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">IP3 People</a>
+                    <a href="#offerings" class="block py-2.5 px-3 rounded-xl bg-brand text-white text-center font-semibold mt-2">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Standardized Hero Section -->
+    <header class="relative w-full min-h-[70vh] py-32 md:py-40 flex items-center justify-center overflow-hidden bg-gray-900">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/70 to-gray-900/90"></div>
+        
+        <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
+            <span class="text-xs font-bold text-green-300 uppercase tracking-widest bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full inline-block mb-6 border border-white/20">
+                MERLA Framework
+            </span>
+            <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-white uppercase tracking-tight font-sans drop-shadow-2xl leading-tight text-balance mb-8">
+                MONITORING, EVALUATION, RESEARCH, LEARNING, AND ADAPTATION <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-300 to-teal-200">(MERLA)</span>
+            </h1>
+            <div class="flex justify-center">
+                <a href="#offerings" class="inline-flex items-center justify-center px-8 py-3.5 bg-brand text-white text-base font-semibold rounded-full hover:bg-brand-dark transition-all duration-200 shadow-elevated hover:scale-105">
+                    Explore Solutions
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Core Offerings & Standardized Black Dashboard Section -->
+    <section id="offerings" class="py-24 px-6 max-w-7xl mx-auto">
+        
+        <!-- Intro Context -->
+        <div class="max-w-4xl mx-auto text-center mb-16">
+            <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Service Capabilities</span>
+            <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 mb-6">Our Core Offerings</h2>
+            <p class="text-base md:text-lg text-gray-600 leading-relaxed">
+                At IP3 Consulting, we deliver tailored MERLA solutions to empower effective decision-making, enhance performance, and drive systemic change. Combining social science expertise, digital innovation, and adaptive learning, we help organizations achieve measurable impact across diverse sectors.
+            </p>
+        </div>
+
+        <!-- Standardized Black Dashboard -->
+        <div x-data="{ activeTab: 'impact' }" class="bg-gray-900 text-white rounded-[2rem] shadow-elevated flex flex-col lg:flex-row overflow-hidden border border-gray-800 min-h-[700px]">
+            
+            <!-- Left Sidebar: Options -->
+            <div class="w-full lg:w-1/3 bg-gray-900/95 p-6 lg:p-8 flex flex-col gap-3 border-b lg:border-b-0 lg:border-r border-gray-800 shrink-0 z-10">
+                <button @click="activeTab = 'impact'" :class="activeTab === 'impact' ? 'bg-brand text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white'" class="text-left px-5 py-4 rounded-xl font-semibold transition-all duration-200 flex items-center justify-between group text-sm md:text-base">
+                    <span>Impact Evaluation</span>
+                    <svg :class="activeTab === 'impact' ? '!opacity-100 text-white' : 'opacity-0 group-hover:opacity-100'" class="w-5 h-5 transition-opacity duration-300 hidden lg:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+                
+                <button @click="activeTab = 'monitoring'" :class="activeTab === 'monitoring' ? 'bg-brand text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white'" class="text-left px-5 py-4 rounded-xl font-semibold transition-all duration-200 flex items-center justify-between group text-sm md:text-base">
+                    <span>Monitoring & Results</span>
+                    <svg :class="activeTab === 'monitoring' ? '!opacity-100 text-white' : 'opacity-0 group-hover:opacity-100'" class="w-5 h-5 transition-opacity duration-300 hidden lg:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+
+                <button @click="activeTab = 'fit'" :class="activeTab === 'fit' ? 'bg-brand text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white'" class="text-left px-5 py-4 rounded-xl font-semibold transition-all duration-200 flex items-center justify-between group text-sm md:text-base">
+                    <span>Fit-for-Purpose Evaluation</span>
+                    <svg :class="activeTab === 'fit' ? '!opacity-100 text-white' : 'opacity-0 group-hover:opacity-100'" class="w-5 h-5 transition-opacity duration-300 hidden lg:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+
+                <button @click="activeTab = 'digital'" :class="activeTab === 'digital' ? 'bg-brand text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white'" class="text-left px-5 py-4 rounded-xl font-semibold transition-all duration-200 flex items-center justify-between group text-sm md:text-base">
+                    <span>Digital Monitoring Solutions</span>
+                    <svg :class="activeTab === 'digital' ? '!opacity-100 text-white' : 'opacity-0 group-hover:opacity-100'" class="w-5 h-5 transition-opacity duration-300 hidden lg:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+
+                <button @click="activeTab = 'research'" :class="activeTab === 'research' ? 'bg-brand text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white'" class="text-left px-5 py-4 rounded-xl font-semibold transition-all duration-200 flex items-center justify-between group text-sm md:text-base">
+                    <span>Action Research</span>
+                    <svg :class="activeTab === 'research' ? '!opacity-100 text-white' : 'opacity-0 group-hover:opacity-100'" class="w-5 h-5 transition-opacity duration-300 hidden lg:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+
+            <!-- Right Content Area -->
+            <div class="w-full lg:w-2/3 p-8 lg:p-14 bg-gray-800/80 text-gray-300 relative">
+                
+                <!-- Impact Evaluation Content -->
+                <div x-show="activeTab === 'impact'" 
+                     x-transition:enter="transition ease-out duration-500"
+                     x-transition:enter-start="opacity-0 translate-y-6"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="space-y-8">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80" alt="Impact Evaluation" loading="lazy" class="w-full h-64 lg:h-72 object-cover rounded-2xl shadow-lg border border-gray-700">
+                    <div>
+                        <h3 class="text-3xl lg:text-4xl font-bold tracking-tight text-white mb-2">Impact Evaluation</h3>
+                        <h4 class="text-lg text-emerald-400 font-medium">Globally Benchmarked Methodologies for Informed Decision-Making</h4>
+                    </div>
+                    
+                    <div class="bg-gray-900/90 p-6 rounded-2xl border-l-4 border-brand border-r border-t border-b border-gray-700/60 shadow-sm">
+                        <p class="text-base text-gray-200 leading-relaxed"><strong class="text-white">Our Distinctive Edge:</strong> Data-driven impact assessment frameworks, Globally benchmarked evaluation methodologies, Gender-inclusive impact analysis.</p>
+                    </div>
+                    
+                    <ul class="space-y-5 pt-2">
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-brand/20 text-brand flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</div>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-300">Conducting rigorous outcome and impact evaluations leveraging quasi-experimental and counterfactual methodologies to measure effectiveness and causal attribution.</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-brand/20 text-brand flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</div>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-300">Applying mixed method frameworks integrating qualitative insights with quantitative techniques for holistic impact assessments.</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-brand/20 text-brand flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</div>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-300">Ensuring high quality, globally benchmarked data collection, adhering to World Bank, OECD-DAC criteria, Randomized methodologies, and DFID's best practices.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Monitoring & Results Content -->
+                <div x-show="activeTab === 'monitoring'" 
+                     x-cloak
+                     x-transition:enter="transition ease-out duration-500"
+                     x-transition:enter-start="opacity-0 translate-y-6"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="space-y-8">
+                    <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1200&q=80" alt="Monitoring" loading="lazy" class="w-full h-64 lg:h-72 object-cover rounded-2xl shadow-lg border border-gray-700">
+                    <div>
+                        <h3 class="text-3xl lg:text-4xl font-bold tracking-tight text-white mb-2">Monitoring & Results Measurement</h3>
+                        <h4 class="text-lg text-emerald-400 font-medium">Harnessing Real-Time Insights for Adaptive Program Management</h4>
+                    </div>
+                    
+                    <div class="bg-gray-900/90 p-6 rounded-2xl border-l-4 border-brand border-r border-t border-b border-gray-700/60 shadow-sm">
+                        <p class="text-base text-gray-200 leading-relaxed"><strong class="text-white">Our Distinctive Edge:</strong> Real-time monitoring systems, Geospatial data integration, Adaptive management dashboards.</p>
+                    </div>
+                    
+                    <ul class="space-y-5 pt-2">
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-brand/20 text-brand flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</div>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-300">Designing & Deploying Secure, Scalable Data Systems – Developing context-specific, high-integrity data ecosystems that enhance decision-making, transparency, and accountability.</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-brand/20 text-brand flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</div>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-300">Real Time Monitoring & Predictive Analytics – Leveraging interactive dashboards, AI-powered analytics, and geospatial tools for real-time program tracking and impact assessment.</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-brand/20 text-brand flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</div>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-300">Capacity Building & Institutional Strengthening – Supporting national governments and development organizations in building resilient, high-quality monitoring frameworks.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Fit-for-Purpose Evaluation Content -->
+                <div x-show="activeTab === 'fit'" 
+                     x-cloak
+                     x-transition:enter="transition ease-out duration-500"
+                     x-transition:enter-start="opacity-0 translate-y-6"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="space-y-8">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80" alt="Evaluation" loading="lazy" class="w-full h-64 lg:h-72 object-cover rounded-2xl shadow-lg border border-gray-700">
+                    <div>
+                        <h3 class="text-3xl lg:text-4xl font-bold tracking-tight text-white mb-2">Fit-for-Purpose Evaluation</h3>
+                        <h4 class="text-lg text-emerald-400 font-medium">Tailored, Adaptive, and Data-Driven Evaluation for Complex Challenges</h4>
+                    </div>
+                    
+                    <div class="bg-gray-900/90 p-6 rounded-2xl border-l-4 border-brand border-r border-t border-b border-gray-700/60 shadow-sm">
+                        <p class="text-base text-gray-200 leading-relaxed"><strong class="text-white">Our Distinctive Edge:</strong> Mixed method evaluation design, Context-specific MEL frameworks, Adaptive evaluation for specific programs.</p>
+                    </div>
+                    
+                    <ul class="space-y-5 pt-2">
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-brand/20 text-brand flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</div>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-300">Bespoke Mixed Method Evaluation Design – Crafting customized evaluation frameworks that integrate advanced quantitative analytics with qualitative methodologies for context specific insights.</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-brand/20 text-brand flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</div>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-300">Sector-Specific Evaluation & Local Adaptation – Developing targeted evaluation approaches for key sectors, including climate resilience, global health, education, and sustainable development.</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-brand/20 text-brand flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</div>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-300">Operational & Adaptive Research – Conducting real-time operational research to identify bottlenecks, enhance resource efficiency, and optimize implementation strategies.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Digital Monitoring Content -->
+                <div x-show="activeTab === 'digital'" 
+                     x-cloak
+                     x-transition:enter="transition ease-out duration-500"
+                     x-transition:enter-start="opacity-0 translate-y-6"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="space-y-8">
+                    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80" alt="Digital Solutions" loading="lazy" class="w-full h-64 lg:h-72 object-cover rounded-2xl shadow-lg border border-gray-700">
+                    <div>
+                        <h3 class="text-3xl lg:text-4xl font-bold tracking-tight text-white mb-2">Digital Monitoring Solutions</h3>
+                        <h4 class="text-lg text-emerald-400 font-medium">Harnessing AI, Automation, and Digital Transformation</h4>
+                    </div>
+                    
+                    <div class="bg-gray-900/90 p-6 rounded-2xl border-l-4 border-brand border-r border-t border-b border-gray-700/60 shadow-sm">
+                        <p class="text-base text-gray-200 leading-relaxed"><strong class="text-white">Our Distinctive Edge:</strong> Real-time monitoring systems, Geospatial data integration, Adaptive management dashboards.</p>
+                    </div>
+                    
+                    <ul class="space-y-5 pt-2">
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-brand/20 text-brand flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</div>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-300">AI-Powered Data Analytics & Predictive Modeling – Leveraging machine learning and AI-driven automation to enhance data accuracy and optimize trend forecasting.</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-brand/20 text-brand flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</div>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-300">Scalable Digital Platforms & Visualization Dashboards – Deploying cost-effective, interactive data ecosystems that integrate custom analytics and real-time performance tracking.</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-brand/20 text-brand flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</div>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-300">IoT & ICT Integration for Seamless Data Collection – Utilizing Internet of Things (IoT) devices and digital reporting tools to ensure enhanced data integrity.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Action Research Content -->
+                <div x-show="activeTab === 'research'" 
+                     x-cloak
+                     x-transition:enter="transition ease-out duration-500"
+                     x-transition:enter-start="opacity-0 translate-y-6"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="space-y-8">
+                    <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80" alt="Action Research" loading="lazy" class="w-full h-64 lg:h-72 object-cover rounded-2xl shadow-lg border border-gray-700">
+                    <div>
+                        <h3 class="text-3xl lg:text-4xl font-bold tracking-tight text-white mb-2">Action Research & Collaboration</h3>
+                        <h4 class="text-lg text-emerald-400 font-medium">Tailored Solutions for Complex Challenges</h4>
+                    </div>
+                    
+                    <div class="bg-gray-900/90 p-6 rounded-2xl border-l-4 border-brand border-r border-t border-b border-gray-700/60 shadow-sm">
+                        <p class="text-base text-gray-200 leading-relaxed"><strong class="text-white">Our Distinctive Edge:</strong> Mixed method evaluation design, Context-specific MEL frameworks, Adaptive evaluation.</p>
+                    </div>
+                    
+                    <ul class="space-y-5 pt-2">
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-brand/20 text-brand flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</div>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-300">Stakeholder-Led Knowledge Co-Creation - Implementing participatory action research models that engage local communities to generate data-driven solutions.</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-brand/20 text-brand flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</div>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-300">Adaptive Learning & Iterative Strategy Refinement – Facilitating "Pause and Reflect" workshops, real-time program adaptation, and continuous learning cycles.</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-brand/20 text-brand flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">✓</div>
+                            <p class="text-base md:text-lg leading-relaxed text-gray-300">Multi-Level Knowledge Exchange for Scalable Solutions – Aligning local insights with global development frameworks through cross-sectoral collaboration.</p>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- MERLA Projects — Standardized Apple Cards -->
+    <section class="bg-white py-24 px-6 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Track Record</span>
+                <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4">MERLA Projects</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="group bg-white rounded-[2rem] overflow-hidden border border-gray-200/80 shadow-card flex flex-col card-hover">
+                    <div class="aspect-[16/10] overflow-hidden bg-gray-100 relative">
+                        <img src="https://images.unsplash.com/photo-1606166325683-e6deb697d301?auto=format&fit=crop&w=600&q=80" alt="HALOW+" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <span class="absolute top-4 left-4 bg-brand text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">2019</span>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 leading-snug group-hover:text-brand transition">Health Access and Linkage Opportunities for Workers [HALOW+] (2019)</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed flex-grow">
+                            IP3 Consulting played a key role in the HALOW+ Program, a multi-stakeholder initiative led by Marks & Spencer (M&S), GlaxoSmithKline (GSK), PwC-UK, Care International, and Tufts University-USA to improve health service markets, worker well-being, and factory productivity in Bangladesh's ready-made garment (RMG) sector.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="group bg-white rounded-[2rem] overflow-hidden border border-gray-200/80 shadow-card flex flex-col card-hover">
+                    <div class="aspect-[16/10] overflow-hidden bg-gray-100 relative">
+                        <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=600&q=80" alt="Urban Sanitation" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <span class="absolute top-4 left-4 bg-brand text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">2020</span>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 leading-snug group-hover:text-brand transition">Transforming Urban Sanitation with Data-Driven Monitoring & Evaluation (2020)</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed flex-grow">
+                            IP3 Consulting designed the Monitoring & Evaluation (M&E) and Results Framework for the Dhaka Sewerage Improvement Project (DSIP), a five-year initiative aimed at enhancing sewerage networks, wastewater treatment, and non-network sanitation services.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="group bg-white rounded-[2rem] overflow-hidden border border-gray-200/80 shadow-card flex flex-col card-hover">
+                    <div class="aspect-[16/10] overflow-hidden bg-gray-100 relative">
+                        <img src="https://images.unsplash.com/photo-1509391366360-1f9509e9247e?auto=format&fit=crop&w=600&q=80" alt="Clean Energy" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <span class="absolute top-4 left-4 bg-brand text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">2018</span>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4 leading-snug group-hover:text-brand transition">Accelerating Clean Energy Access Through Results-Based Financing (2018)</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed flex-grow">
+                            IP3 Consulting led the design and implementation of a results-based financing strategy for the Global Lighting & Energy Access Partnership (Global LEAP), fostering self-sustaining commercial markets for off-grid solar solutions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Standardized Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 py-12 text-center text-gray-400 text-sm">
+        <div class="max-w-7xl mx-auto px-6">
+            <p class="mb-2">© 2026 IP3 Consulting Limited — Institute for Public Policy and Practice. All rights reserved.</p>
+            <p class="text-gray-400 text-sm">
+                <span>Monitoring, Evaluation, Research, Learning, and Adaptation (MERLA) Solutions</span> | 
+                <a href="https://www.ip3-bd.org" class="text-green-400 hover:text-white transition">www.ip3-bd.org</a>
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
