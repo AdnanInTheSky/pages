@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Policy Innovation and Action Research | IP3 Consulting</title>
+    
+    <!-- Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Unified Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            light: '#e8f5ed',
+                            DEFAULT: '#0F7645',
+                            dark: '#0a4f2e',
+                            900: '#052e1a',
+                        },
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'card': '0 10px 30px -5px rgba(0, 0, 0, 0.06)',
+                        'elevated': '0 20px 40px -10px rgba(0, 0, 0, 0.12)',
+                    }
+                }
+            }
+        }
+        
+        // Setup Alpine Fetch Logic
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('siteData', () => ({
+                content: null,
+                loading: true,
+                error: false,
+                mobileMenuOpen: false,
+                async init() {
+                    try {
+                        const res = await fetch('policy_innov.json');
+                        if (!res.ok) throw new Error('Network response was not ok');
+                        this.content = await res.json();
+                    } catch (err) {
+                        console.error("Failed to load JSON (Are you running a local server?): ", err);
+                        this.error = true;
+                    } finally {
+                        this.loading = false;
+                    }
+                }
+            }))
+        })
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        [x-cloak] { display: none !important; }
+
+        /* Glassmorphism Header */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        /* 3D Flip Card System */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .group:hover .group-hover\:rotate-y-180 { transform: rotateY(180deg); }
+        .card-flip-transition {
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 9999px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Card Hover Lift */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Hide Scrollbar */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Text Balance */
+        .text-balance { text-wrap: balance; }
+
+        /* Fade in */
+        .animate-fade-in { animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased selection:bg-brand selection:text-white" x-data="siteData" x-init="init()">
+
+    <!-- Loading State -->
+    <div x-show="loading" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
+        <div class="flex flex-col items-center gap-4">
+            <div class="w-12 h-12 border-4 border-brand/20 border-t-brand rounded-full animate-spin"></div>
+            <div class="text-lg font-semibold text-brand animate-pulse">Loading Application Data...</div>
+        </div>
+    </div>
+    
+    <!-- CORS / Network Error State -->
+    <div x-show="error" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center text-center px-6" x-cloak>
+        <div class="max-w-md bg-red-50 border border-red-200 rounded-3xl p-8 shadow-card">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+            <h2 class="text-2xl font-bold text-red-600 mb-3">Unable to Load Data</h2>
+            <p class="text-gray-600 text-sm leading-relaxed mb-6">Failed to fetch <code class="bg-red-100/60 text-red-700 px-1.5 py-0.5 rounded text-xs font-mono">policy_innov.json</code>. If viewing directly from your computer (<code class="text-xs font-mono">file://</code>), browser security prevents direct JSON reading. Please launch via a local web server.</p>
+            <button @click="location.reload()" class="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-full transition shadow-sm">Retry</button>
+        </div>
+    </div>
+
+    <div x-show="!loading && !error" x-cloak>
+        
+        <!-- Standardized Glass Navigation Bar -->
+        <nav class="glass-nav sticky top-0 z-50 border-b border-gray-200/70">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                <a href="#" class="text-2xl font-extrabold tracking-tight text-gray-900 flex items-center gap-1.5">
+                    <span x-text="content.nav.brand"></span><span class="text-brand" x-text="content.nav.brandSpan"></span>
+                </a>
+                
+                <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
+                    <template x-for="link in content.nav.links" :key="link">
+                        <a href="#" class="hover:text-brand transition" x-text="link"></a>
+                    </template>
+                    <a href="#dashboard" class="bg-brand text-white px-5 py-2.5 rounded-full hover:bg-brand-dark transition shadow-sm font-semibold" x-text="content.nav.cta"></a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden relative">
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-700 hover:text-brand focus:outline-none p-2" aria-label="Toggle navigation">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                    <div x-show="mobileMenuOpen" 
+                         @click.outside="mobileMenuOpen = false" 
+                         x-transition
+                         class="absolute top-12 right-0 w-60 bg-white border border-gray-100 rounded-2xl shadow-xl p-4 space-y-2 text-sm font-medium text-gray-700 z-50">
+                        <template x-for="link in content.nav.links" :key="link">
+                            <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition" x-text="link"></a>
+                        </template>
+                        <a href="#dashboard" class="block py-2.5 px-3 rounded-xl bg-brand text-white text-center font-semibold mt-2" x-text="content.nav.cta"></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Standardized Hero Section -->
+        <section class="relative overflow-hidden py-36 md:py-48 flex items-center justify-center min-h-[75vh] bg-gray-900">
+            <img :src="content.hero.bgImage" alt="Hero Background" class="absolute inset-0 w-full h-full object-cover opacity-35">
+            <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/70 to-gray-900/90"></div>
+            
+            <div class="max-w-5xl mx-auto px-6 text-center relative z-10">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6 leading-tight" x-html="content.hero.title"></h1>
+                <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed font-normal text-balance" x-text="content.hero.subtitle"></p>
+                <a href="#dashboard" class="inline-flex items-center justify-center px-8 py-3.5 bg-brand text-white text-base font-semibold rounded-full hover:bg-brand-dark transition-all duration-200 shadow-elevated shadow-brand/20">
+                    <span x-text="content.hero.cta"></span>
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- Core Offerings Section -->
+        <section class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center mb-16">
+                    <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Capabilities</span>
+                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4" x-text="content.coreOfferings.title"></h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto text-lg" x-text="content.coreOfferings.subtitle"></p>
+                </div>
+                
+                <div class="grid grid-cols-1 gap-12">
+                    <template x-for="item in content.coreOfferings.items" :key="item.title">
+                        <div class="card-hover flex flex-col bg-white border border-gray-200/80 rounded-[2rem] overflow-hidden shadow-card" :class="item.reverse ? 'md:flex-row-reverse' : 'md:flex-row'">
+                            <div class="md:w-1/2 bg-gray-100 relative min-h-[320px]">
+                                <img :src="item.image" :alt="item.title" class="w-full h-full object-cover">
+                            </div>
+                            <div class="md:w-1/2 p-8 md:p-14 flex flex-col justify-center">
+                                <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 tracking-tight" x-text="item.title"></h3>
+                                <p class="text-gray-600 leading-relaxed text-base" x-text="item.description"></p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section (3D Flip Cards) -->
+        <section class="py-24 bg-gray-50 border-t border-b border-gray-200/70">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center mb-16">
+                    <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Value Proposition</span>
+                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4" x-text="content.benefits.title"></h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto text-lg" x-text="content.benefits.subtitle"></p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <template x-for="item in content.benefits.items" :key="item.title">
+                        <div class="group perspective-1000 min-h-[440px] cursor-pointer">
+                            <div class="relative w-full h-full card-flip-transition transform-style-3d group-hover:rotate-y-180 rounded-[2rem] shadow-card">
+                                
+                                <!-- Card Front -->
+                                <div class="absolute inset-0 w-full h-full bg-white rounded-[2rem] p-8 flex flex-col backface-hidden border border-gray-200/80">
+                                    <div class="aspect-[4/3] rounded-2xl mb-6 overflow-hidden bg-gray-100">
+                                        <img :src="item.image" :alt="item.title" class="w-full h-full object-cover">
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-2 text-center" x-text="item.title"></h3>
+                                    <p class="text-brand text-xs uppercase tracking-widest text-center font-bold mt-auto bg-brand/10 py-1.5 px-3 rounded-full" x-text="item.frontHover"></p>
+                                </div>
+
+                                <!-- Card Back -->
+                                <div class="absolute inset-0 w-full h-full bg-brand text-white rounded-[2rem] p-8 flex flex-col justify-center items-center backface-hidden rotate-y-180 shadow-elevated border border-brand-dark overflow-y-auto custom-scroll">
+                                    <h3 class="text-xl font-bold text-white mb-4 border-b border-green-400/40 pb-2 w-full text-center" x-text="item.title"></h3>
+                                    <p class="text-green-50 leading-relaxed text-sm text-center" x-text="item.backText"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <!-- Policy Research Dashboard Section -->
+        <section id="dashboard" class="py-24 bg-white text-gray-900" x-data="{ activeTab: 'development' }" x-init="activeTab = content.dashboard.tabs[0].id">
+            <div class="max-w-7xl mx-auto px-6">
+                
+                <div class="mb-14 text-center max-w-3xl mx-auto">
+                    <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Service Matrix</span>
+                    <h2 class="text-3xl md:text-5xl font-bold mb-4 text-gray-900 tracking-tight" x-html="content.dashboard.title"></h2>
+                    <p class="text-gray-600 text-lg leading-relaxed max-w-3xl mx-auto" x-text="content.dashboard.subtitle"></p>
+                </div>
+
+                <div class="bg-gray-900 text-white rounded-[2rem] shadow-elevated border border-gray-800 overflow-hidden flex flex-col lg:flex-row min-h-[600px]">
+                    
+                    <!-- Sidebar Tabs -->
+                    <div class="lg:w-1/3 bg-gray-900/90 border-b lg:border-b-0 lg:border-r border-gray-800 p-6 flex flex-row lg:flex-col gap-3 overflow-x-auto hide-scrollbar">
+                        <template x-for="tab in content.dashboard.tabs" :key="tab.id">
+                            <button @click="activeTab = tab.id" 
+                                    :class="activeTab === tab.id ? 'bg-brand text-white shadow-md' : 'bg-transparent text-gray-400 hover:bg-gray-800 hover:text-white'"
+                                    class="whitespace-nowrap lg:whitespace-normal text-left px-5 py-4 rounded-xl font-semibold transition-all flex items-center justify-between group text-sm md:text-base">
+                                <span x-text="tab.label"></span>
+                                <svg class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity hidden lg:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
+                        </template>
+                    </div>
+
+                    <!-- Content Tab Pane -->
+                    <div class="lg:w-2/3 p-8 md:p-12 bg-gray-800/80 relative">
+                        <template x-for="tab in content.dashboard.tabs" :key="tab.id">
+                            <div x-show="activeTab === tab.id" x-transition.opacity class="animate-fade-in">
+                                <div class="aspect-video w-full rounded-2xl overflow-hidden mb-8 shadow-lg border border-gray-700">
+                                    <img :src="tab.image" :alt="tab.label" class="w-full h-full object-cover">
+                                </div>
+                                <h3 class="text-2xl md:text-3xl font-bold mb-4 text-white" x-text="tab.title"></h3>
+                                <p class="text-gray-300 leading-relaxed mb-8 text-base md:text-lg" x-text="tab.description"></p>
+                                
+                                <div class="space-y-6">
+                                    <template x-for="feat in tab.features" :key="feat.title">
+                                        <div class="border-l-2 border-brand pl-6">
+                                            <h4 class="text-lg md:text-xl font-semibold text-white mb-2" x-text="feat.title"></h4>
+                                            <p class="text-gray-400 text-sm leading-relaxed" x-text="feat.desc"></p>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Influence Hero Banner -->
+        <section class="bg-gradient-to-br from-brand via-brand-dark to-gray-900 text-white py-24">
+            <div class="max-w-5xl mx-auto px-6 text-center">
+                <span class="text-xs font-bold text-green-200 uppercase tracking-widest bg-white/10 px-3.5 py-1.5 rounded-full inline-block mb-4">Global Dialogue</span>
+                <h2 class="text-3xl md:text-5xl font-bold mb-3 tracking-tight" x-text="content.influenceIntro.title"></h2>
+                <p class="text-lg md:text-xl font-medium uppercase tracking-wide text-green-200 mb-10 opacity-90" x-text="content.influenceIntro.subtitle"></p>
+                
+                <div class="aspect-video w-full max-w-3xl mx-auto bg-gray-900 rounded-[2rem] overflow-hidden shadow-elevated mb-10 border border-white/15">
+                    <img :src="content.influenceIntro.image" class="w-full h-full object-cover" alt="Conference">
+                </div>
+
+                <p class="text-base md:text-lg leading-relaxed text-green-50 px-6 max-w-4xl mx-auto" x-text="content.influenceIntro.description"></p>
+            </div>
+        </section>
+
+        <!-- Slider 1: Influence Slider (Light) -->
+        <section class="py-24 bg-gray-50 border-b border-gray-200/70 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center mb-16">
+                    <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Policy In Action</span>
+                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-gray-900" x-text="content.influenceSlider.title"></h2>
+                </div>
+                
+                <div x-data="{ currentSlide: 0 }" class="relative">
+                    <div class="overflow-hidden rounded-[2rem] shadow-card border border-gray-200/80 bg-white">
+                        <div class="flex transition-transform duration-500 ease-in-out" :style="`transform: translateX(-${currentSlide * 100}%)`">
+                            
+                            <template x-for="slide in content.influenceSlider.slides" :key="slide.step">
+                                <div class="w-full flex-shrink-0 flex flex-col md:flex-row bg-white text-gray-900">
+                                    <div class="md:w-1/2 relative min-h-[380px]">
+                                        <img :src="slide.image" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="md:w-1/2 p-8 md:p-14 flex flex-col justify-center">
+                                        <div class="text-brand font-bold mb-2 tracking-widest text-xs uppercase" x-text="slide.step"></div>
+                                        <h3 class="text-2xl md:text-3xl font-bold mb-6 tracking-tight text-gray-900" x-text="slide.title"></h3>
+                                        <ul class="space-y-4">
+                                            <template x-for="pt in slide.points" :key="pt">
+                                                <li class="flex items-start">
+                                                    <span class="w-2 h-2 bg-brand rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                                    <span class="text-base text-gray-600 leading-relaxed" x-text="pt"></span>
+                                                </li>
+                                            </template>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </template>
+
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="flex justify-center items-center gap-4 mt-8">
+                        <button @click="currentSlide = currentSlide > 0 ? currentSlide - 1 : content.influenceSlider.slides.length - 1" 
+                                class="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-md border border-gray-200 hover:bg-gray-50 text-gray-800 transition"
+                                aria-label="Previous Slide">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        </button>
+                        
+                        <div class="flex items-center gap-2">
+                            <template x-for="(s, index) in content.influenceSlider.slides" :key="index">
+                                <button @click="currentSlide = index" 
+                                        :class="currentSlide === index ? 'w-7 bg-brand' : 'w-2.5 bg-gray-300 hover:bg-gray-400'" 
+                                        class="h-2.5 rounded-full transition-all duration-300 focus:outline-none"
+                                        :aria-label="`Go to slide ${index + 1}`"></button>
+                            </template>
+                        </div>
+
+                        <button @click="currentSlide = currentSlide < content.influenceSlider.slides.length - 1 ? currentSlide + 1 : 0" 
+                                class="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-md border border-gray-200 hover:bg-gray-50 text-gray-800 transition"
+                                aria-label="Next Slide">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slider 2: Programming Slider (Dark) -->
+        <section class="py-24 bg-gray-900 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center mb-16">
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest bg-brand/30 px-3.5 py-1.5 rounded-full inline-block mb-3">Execution Roadmap</span>
+                    <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight" x-text="content.programmingSlider.title"></h2>
+                </div>
+                
+                <div x-data="{ programSlide: 0 }" class="relative">
+                    <div class="overflow-hidden rounded-[2rem] shadow-elevated border border-gray-800 bg-gray-800">
+                        <div class="flex transition-transform duration-500 ease-in-out" :style="`transform: translateX(-${programSlide * 100}%)`">
+                            
+                            <template x-for="slide in content.programmingSlider.slides" :key="slide.step">
+                                <div class="w-full flex-shrink-0 flex flex-col md:flex-row bg-gray-800 text-white">
+                                    <div class="md:w-1/2 relative min-h-[380px]">
+                                        <img :src="slide.image" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="md:w-1/2 p-8 md:p-14 flex flex-col justify-center">
+                                        <div class="text-emerald-400 font-bold mb-2 tracking-widest text-xs uppercase" x-text="slide.step"></div>
+                                        <h3 class="text-2xl md:text-3xl font-bold mb-6 text-white tracking-tight" x-text="slide.title"></h3>
+                                        <ul class="space-y-4">
+                                            <template x-for="pt in slide.points" :key="pt">
+                                                <li class="flex items-start">
+                                                    <span class="w-2 h-2 bg-emerald-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                                    <span class="text-base text-gray-300 leading-relaxed" x-text="pt"></span>
+                                                </li>
+                                            </template>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </template>
+
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="flex justify-center items-center gap-4 mt-8">
+                        <button @click="programSlide = programSlide > 0 ? programSlide - 1 : content.programmingSlider.slides.length - 1" 
+                                class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-white transition border border-gray-700 shadow-md"
+                                aria-label="Previous Slide">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        </button>
+                        
+                        <div class="flex items-center gap-2">
+                            <template x-for="(s, index) in content.programmingSlider.slides" :key="index">
+                                <button @click="programSlide = index" 
+                                        :class="programSlide === index ? 'w-7 bg-brand' : 'w-2.5 bg-gray-700 hover:bg-gray-600'" 
+                                        class="h-2.5 rounded-full transition-all duration-300 focus:outline-none"
+                                        :aria-label="`Go to slide ${index + 1}`"></button>
+                            </template>
+                        </div>
+
+                        <button @click="programSlide = programSlide < content.programmingSlider.slides.length - 1 ? programSlide + 1 : 0" 
+                                class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-white transition border border-gray-700 shadow-md"
+                                aria-label="Next Slide">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Choose IP3 Section -->
+        <section class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div>
+                        <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-4">Our Advantage</span>
+                        <h2 class="text-3xl md:text-5xl font-bold mb-10 text-gray-900 tracking-tight" x-text="content.whyChoose.title"></h2>
+                        <div class="space-y-8">
+                            <template x-for="item in content.whyChoose.items" :key="item.title">
+                                <div class="flex items-start gap-5">
+                                    <div class="w-14 h-14 rounded-2xl bg-brand/10 flex items-center justify-center flex-shrink-0 mt-1 text-brand">
+                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl md:text-2xl font-bold mb-2 text-gray-900" x-text="item.title"></h3>
+                                        <p class="text-gray-600 leading-relaxed text-base" x-text="item.desc"></p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="aspect-[4/3] lg:aspect-[3/4] bg-gray-100 rounded-[2rem] overflow-hidden shadow-card border border-gray-100">
+                            <img :src="content.whyChoose.image" class="w-full h-full object-cover card-hover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Standardized Footer -->
+        <footer class="bg-gray-950 border-t border-gray-800 py-12 text-center text-gray-400 text-sm">
+            <div class="max-w-7xl mx-auto px-6">
+                <p class="text-gray-400 text-sm mb-2" x-text="content.footer.copyright"></p>
+                <p class="text-gray-400 text-sm">
+                    <span x-text="content.footer.tagline"></span> | 
+                    <a :href="content.footer.url" class="text-green-400 hover:text-white transition" x-text="content.footer.urlText"></a>
+                </p>
+            </div>
+        </footer>
+
+    </div>
+</body>
+</html>

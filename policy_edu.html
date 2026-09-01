@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Education and Human Capacity Development | IP3 Consulting</title>
+    
+    <!-- Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Unified Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            light: '#e8f5ed',
+                            DEFAULT: '#0F7645',
+                            dark: '#0a4f2e',
+                            900: '#052e1a',
+                        },
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'card': '0 10px 30px -5px rgba(0, 0, 0, 0.06)',
+                        'elevated': '0 20px 40px -10px rgba(0, 0, 0, 0.12)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        [x-cloak] { display: none !important; }
+
+        /* Glassmorphism Header */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        /* 3D Flip Card System */
+        .perspective-1000 { perspective: 1000px; }
+        .preserve-3d { transform-style: preserve-3d; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .group:hover .preserve-3d { transform: rotateY(180deg); }
+        .group:hover .group-hover\:rotate-y-180 { transform: rotateY(180deg); }
+        .card-flip-transition {
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 9999px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Card Hover Lift */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Text Balance */
+        .text-balance { text-wrap: balance; }
+
+        /* Fade in */
+        .animate-fade-in { animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased selection:bg-brand selection:text-white"
+      x-data="appData()" 
+      x-init="init()">
+
+    <!-- Loading State -->
+    <div x-show="loading" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
+        <div class="flex flex-col items-center gap-4">
+            <div class="w-12 h-12 border-4 border-brand/20 border-t-brand rounded-full animate-spin"></div>
+            <div class="text-lg font-semibold text-brand animate-pulse">Loading Application Data...</div>
+        </div>
+    </div>
+
+    <!-- CORS / Network Error State -->
+    <div x-show="error" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center text-center px-6" x-cloak>
+        <div class="max-w-md bg-red-50 border border-red-200 rounded-3xl p-8 shadow-card">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+            <h2 class="text-2xl font-bold text-red-600 mb-3">Unable to Load Data</h2>
+            <p class="text-gray-600 text-sm leading-relaxed mb-6">Failed to fetch <code class="bg-red-100/60 text-red-700 px-1.5 py-0.5 rounded text-xs font-mono">policy_edu.json</code>. If viewing directly from your file system (<code class="text-xs font-mono">file://</code>), browser security blocks JSON requests. Please launch using a local server.</p>
+            <button @click="location.reload()" class="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-full transition shadow-sm">Retry</button>
+        </div>
+    </div>
+
+    <template x-if="!loading && content">
+        <div>
+            
+            <!-- Standardized Glass Navigation Bar -->
+            <nav class="glass-nav sticky top-0 z-50 border-b border-gray-200/70">
+                <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                    <a href="#" class="text-2xl font-extrabold tracking-tight text-gray-900 flex items-center gap-1.5">
+                        <span>IP3</span><span class="text-brand">Consulting</span>
+                    </a>
+                    
+                    <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
+                        <a href="#" class="hover:text-brand transition">Home</a>
+                        <a href="#" class="hover:text-brand transition">About Us</a>
+                        <a href="#" class="hover:text-brand transition">Focus Areas</a>
+                        <a href="#" class="hover:text-brand transition">Our Services</a>
+                        <a href="#" class="hover:text-brand transition">IP3 People</a>
+                        <a href="#offerings" class="bg-brand text-white px-5 py-2.5 rounded-full hover:bg-brand-dark transition shadow-sm font-semibold">Contact</a>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <div class="md:hidden relative">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-700 hover:text-brand focus:outline-none p-2" aria-label="Toggle navigation">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                                <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                        <div x-show="mobileMenuOpen" 
+                             @click.outside="mobileMenuOpen = false" 
+                             x-transition
+                             class="absolute top-12 right-0 w-60 bg-white border border-gray-100 rounded-2xl shadow-xl p-4 space-y-2 text-sm font-medium text-gray-700 z-50">
+                            <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Home</a>
+                            <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">About Us</a>
+                            <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Focus Areas</a>
+                            <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Our Services</a>
+                            <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">IP3 People</a>
+                            <a href="#offerings" class="block py-2.5 px-3 rounded-xl bg-brand text-white text-center font-semibold mt-2">Contact</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Standardized Hero Section -->
+            <header class="relative py-36 md:py-48 px-6 text-center flex items-center justify-center min-h-[75vh] overflow-hidden bg-gray-900">
+                <img :src="content.hero.bg_image" alt="Hero background" class="absolute inset-0 w-full h-full object-cover z-0 opacity-40">
+                <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/70 to-gray-900/90 z-10"></div>
+                <div class="max-w-4xl mx-auto relative z-20 text-white">
+                    <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-balance mb-6 leading-tight" x-html="content.hero.title"></h1>
+                    <p class="text-lg md:text-xl text-gray-300 font-normal mb-10 max-w-2xl mx-auto leading-relaxed" x-text="content.hero.subtitle"></p>
+                    <a href="#offerings" class="inline-flex items-center justify-center px-8 py-3.5 bg-brand text-white text-base font-semibold rounded-full hover:bg-brand-dark transition-all duration-200 shadow-elevated shadow-brand/20">
+                        Explore Focus Areas
+                    </a>
+                </div>
+            </header>
+
+            <!-- Section 1: Innovative Approaches -->
+            <section class="py-24 px-6 max-w-7xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
+                    <div>
+                        <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-4">Transformative Learning</span>
+                        <h2 class="text-3xl md:text-5xl font-bold tracking-tight mb-6 text-balance text-gray-900" x-text="content.innovative_approaches.title"></h2>
+                        <p class="text-lg text-gray-600 mb-8 leading-relaxed" x-text="content.innovative_approaches.description"></p>
+                        <button class="bg-brand hover:bg-brand-dark text-white font-semibold py-3.5 px-8 rounded-full transition-colors duration-200 shadow-md shadow-brand/15" x-text="content.innovative_approaches.button_text"></button>
+                    </div>
+                    <div class="relative h-[420px] lg:h-[480px] rounded-[2rem] overflow-hidden shadow-card border border-gray-100">
+                        <img :src="content.innovative_approaches.image" class="w-full h-full object-cover card-hover" alt="Digital Learning">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Online Seminar Banner & Interactive Video -->
+            <section class="px-6 mb-24 max-w-6xl mx-auto">
+                <div class="bg-gray-900 text-white rounded-[2rem] p-8 md:p-14 flex flex-col md:flex-row items-center justify-between gap-10 shadow-card border border-gray-800">
+                    <div class="flex-1">
+                        <p class="text-brand font-semibold tracking-wide uppercase text-xs mb-3 bg-brand/15 px-3 py-1 rounded-full inline-block" x-text="content.seminar.badge"></p>
+                        <h2 class="text-3xl md:text-5xl font-bold tracking-tight mb-3 text-white" x-html="content.seminar.title"></h2>
+                        <p class="text-base font-medium text-emerald-400 mb-5 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <span x-text="content.seminar.date"></span>
+                        </p>
+                        <h3 class="text-xl md:text-2xl font-semibold mb-3 text-gray-100" x-text="content.seminar.subtitle"></h3>
+                        <p class="text-gray-400 mb-8 leading-relaxed text-sm md:text-base" x-text="content.seminar.description"></p>
+                        <div class="flex flex-wrap items-center gap-5">
+                            <button class="bg-brand text-white font-semibold py-3 px-8 rounded-full hover:bg-brand-dark transition shadow-md shadow-brand/20" x-text="content.seminar.register_button"></button>
+                            <a href="#" class="text-gray-300 hover:text-white font-medium transition flex items-center gap-1.5" x-text="content.seminar.learn_more_button"></a>
+                        </div>
+                    </div>
+
+                    <!-- Video Thumbnail -->
+                    <div @click="openVideo(content.seminar.youtube_embed_id)" class="w-full md:w-[380px] h-60 bg-black rounded-2xl relative overflow-hidden group cursor-pointer border border-gray-800 shadow-lg flex-shrink-0">
+                        <img :src="content.seminar.thumbnail_image" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 transition duration-500" alt="Seminar Preview">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-16 h-16 bg-brand rounded-full flex items-center justify-center pl-1 shadow-lg group-hover:scale-110 transition duration-300">
+                                <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Video Modal -->
+            <div x-show="videoModalOpen" 
+                 x-cloak
+                 @keydown.escape.window="closeVideo()" 
+                 class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+                <div @click.outside="closeVideo()" class="relative w-full max-w-4xl bg-black rounded-2xl overflow-hidden border border-gray-800 shadow-elevated">
+                    <button @click="closeVideo()" class="absolute top-4 right-4 z-10 text-white/70 hover:text-white bg-black/60 hover:bg-black p-2.5 rounded-full transition" aria-label="Close Video">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                    <div class="relative pt-[56.25%] w-full">
+                        <iframe x-bind:src="videoModalOpen ? `https://www.youtube-nocookie.com/embed/${currentVideoId}?autoplay=1` : ''" 
+                                class="absolute inset-0 w-full h-full" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Articles & Publications (3D Flip Cards) -->
+            <section class="px-6 py-24 max-w-7xl mx-auto border-t border-gray-200">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-14 gap-6">
+                    <div>
+                        <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Publications & Research</span>
+                        <h2 class="text-2xl md:text-4xl font-bold tracking-tight max-w-2xl text-balance text-gray-900" x-text="content.articles_header.title"></h2>
+                    </div>
+                    <p class="max-w-md text-gray-500 font-medium text-sm md:text-base leading-relaxed" x-text="content.articles_header.subtitle"></p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <template x-for="(article, idx) in content.articles" :key="idx">
+                        <div class="group h-[360px] w-full cursor-pointer perspective-1000">
+                            <div class="relative w-full h-full preserve-3d card-flip-transition rounded-[1.8rem] shadow-card">
+                                
+                                <!-- Card Front -->
+                                <div class="absolute inset-0 w-full h-full backface-hidden bg-white rounded-[1.8rem] overflow-hidden border border-gray-100">
+                                    <img :src="article.image" class="absolute inset-0 w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex items-end p-7">
+                                        <p class="text-white font-bold text-xl leading-snug" x-text="article.title"></p>
+                                    </div>
+                                </div>
+
+                                <!-- Card Back -->
+                                <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 bg-brand text-white rounded-[1.8rem] p-8 flex flex-col justify-center text-center shadow-card border border-brand-dark">
+                                    <h4 class="text-lg font-bold mb-3 text-green-100" x-text="article.title"></h4>
+                                    <p class="font-medium text-sm leading-relaxed text-green-50" x-text="article.back_text"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </section>
+
+            <!-- Section 4: What We Offer (Dashboard / Tabbed Area) -->
+            <section id="offerings" class="py-24 bg-gray-900 text-white">
+                <div class="max-w-7xl mx-auto px-6">
+                    
+                    <div class="mb-14 text-center max-w-3xl mx-auto">
+                        <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest bg-brand/30 px-3.5 py-1.5 rounded-full inline-block mb-3">Service Matrix</span>
+                        <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-white" x-text="content.dashboard.heading"></h2>
+                        <p class="text-gray-400 mt-4 text-base md:text-lg" x-text="content.dashboard.subheading"></p>
+                    </div>
+
+                    <div class="flex flex-col lg:flex-row gap-10">
+                        
+                        <!-- Tabs Sidebar -->
+                        <div class="w-full lg:w-1/4">
+                            <div class="bg-gray-800/90 rounded-2xl p-3 flex flex-col gap-2 sticky top-24 border border-gray-700/60 shadow-lg">
+                                <button @click="tab = 'digital'" 
+                                        :class="tab === 'digital' ? 'bg-brand text-white shadow-md' : 'text-gray-400 hover:bg-white/5 hover:text-white'" 
+                                        class="w-full text-left px-5 py-3.5 rounded-xl font-semibold transition-all duration-200 flex justify-between items-center text-sm md:text-base">
+                                    Digital Education
+                                    <span x-show="tab === 'digital'">&rarr;</span>
+                                </button>
+                                <button @click="tab = 'human'" 
+                                        :class="tab === 'human' ? 'bg-brand text-white shadow-md' : 'text-gray-400 hover:bg-white/5 hover:text-white'" 
+                                        class="w-full text-left px-5 py-3.5 rounded-xl font-semibold transition-all duration-200 flex justify-between items-center text-sm md:text-base">
+                                    Human Capacity
+                                    <span x-show="tab === 'human'">&rarr;</span>
+                                </button>
+                                <button @click="tab = 'impact'" 
+                                        :class="tab === 'impact' ? 'bg-brand text-white shadow-md' : 'text-gray-400 hover:bg-white/5 hover:text-white'" 
+                                        class="w-full text-left px-5 py-3.5 rounded-xl font-semibold transition-all duration-200 flex justify-between items-center text-sm md:text-base">
+                                    Impact Assessment
+                                    <span x-show="tab === 'impact'">&rarr;</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Content Pane -->
+                        <div class="w-full lg:w-3/4 min-h-[650px]">
+                            
+                            <!-- Digital Tab -->
+                            <div x-show="tab === 'digital'" x-cloak class="animate-fade-in">
+                                <div class="bg-gray-800/80 p-8 md:p-12 rounded-3xl border border-gray-700/60 mb-12 shadow-card">
+                                    <h3 class="text-2xl md:text-3xl font-bold mb-3 tracking-tight text-white" x-text="content.dashboard.tabs.digital.title"></h3>
+                                    <p class="text-base md:text-lg font-semibold text-emerald-400 mb-6" x-text="content.dashboard.tabs.digital.subtitle"></p>
+                                    <p class="mb-10 text-gray-300 leading-relaxed max-w-3xl text-sm md:text-base" x-text="content.dashboard.tabs.digital.description"></p>
+                                    
+                                    <div class="grid md:grid-cols-3 gap-5">
+                                        <template x-for="(hl, i) in content.dashboard.tabs.digital.highlights" :key="i">
+                                            <div class="bg-gray-900/90 p-6 rounded-2xl border border-gray-700/60 text-sm text-gray-300 leading-relaxed" x-text="hl"></div>
+                                        </template>
+                                    </div>
+                                </div>
+
+                                <h4 class="text-xl md:text-2xl font-bold mb-6 text-white">Our Expertise</h4>
+                                <div class="grid md:grid-cols-3 gap-6">
+                                    <template x-for="(exp, i) in content.dashboard.tabs.digital.expertise" :key="i">
+                                        <div class="group h-[380px] w-full cursor-pointer perspective-1000">
+                                            <div class="relative w-full h-full preserve-3d card-flip-transition rounded-2xl shadow-card">
+                                                <div class="absolute inset-0 w-full h-full backface-hidden bg-gray-800/90 rounded-2xl flex flex-col items-center justify-center p-8 border border-gray-700/60 text-center">
+                                                    <div class="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mb-6 text-emerald-400 border border-gray-700 shadow-inner">
+                                                        <svg x-show="i === 0" class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                                                        <svg x-show="i === 1" class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg>
+                                                        <svg x-show="i === 2" class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                                    </div>
+                                                    <h3 class="text-xl font-bold text-white mb-2" x-text="exp.title"></h3>
+                                                    <span class="text-xs text-gray-400 uppercase tracking-widest mt-2">Hover to view</span>
+                                                </div>
+                                                <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 bg-brand text-white rounded-2xl p-6 overflow-y-auto custom-scroll border border-brand-dark">
+                                                    <h4 class="font-bold text-sm mb-3 border-b border-green-400/40 pb-2 text-green-100" x-text="exp.title"></h4>
+                                                    <template x-for="(item, itemIdx) in exp.items" :key="itemIdx">
+                                                        <p class="mb-3 text-xs leading-relaxed">
+                                                            <strong class="text-green-200" x-text="item.label + ':'"></strong> <span class="text-green-50" x-text="item.text"></span>
+                                                        </p>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <!-- Human Tab -->
+                            <div x-show="tab === 'human'" x-cloak class="animate-fade-in">
+                                <div class="bg-gray-800/80 p-8 md:p-12 rounded-3xl border border-gray-700/60 mb-12 flex flex-col md:flex-row gap-8 items-center shadow-card">
+                                    <div class="flex-1">
+                                        <h3 class="text-2xl md:text-3xl font-bold mb-3 tracking-tight text-white" x-text="content.dashboard.tabs.human.title"></h3>
+                                        <p class="text-base md:text-lg font-semibold text-emerald-400 mb-4" x-text="content.dashboard.tabs.human.subtitle"></p>
+                                        <p class="mb-6 text-gray-300 leading-relaxed text-sm md:text-base" x-text="content.dashboard.tabs.human.description"></p>
+                                        <ul class="space-y-3 text-sm text-gray-300">
+                                            <template x-for="(b, i) in content.dashboard.tabs.human.bullets" :key="i">
+                                                <li class="flex items-start"><span class="text-emerald-400 mr-2.5 font-bold">●</span> <div><strong class="text-white" x-text="b.label + ':'"></strong> <span x-text="b.text"></span></div></li>
+                                            </template>
+                                        </ul>
+                                    </div>
+                                    <div class="w-full md:w-1/3 h-64 rounded-2xl overflow-hidden hidden md:block border border-gray-700 shadow-md">
+                                        <img :src="content.dashboard.tabs.human.image" class="w-full h-full object-cover" alt="Human Capacity">
+                                    </div>
+                                </div>
+
+                                <h4 class="text-xl md:text-2xl font-bold mb-6 text-white">Our Expertise</h4>
+                                <div class="grid lg:grid-cols-3 gap-6">
+                                    <template x-for="(exp, i) in content.dashboard.tabs.human.expertise" :key="i">
+                                        <div class="bg-gray-800/80 p-8 rounded-2xl border border-gray-700/60 shadow-card">
+                                            <h4 class="font-bold text-lg mb-4 text-emerald-400" x-text="exp.title"></h4>
+                                            <ul class="space-y-3.5 text-gray-300 text-sm leading-relaxed">
+                                                <template x-for="(item, itemIdx) in exp.items" :key="itemIdx">
+                                                    <li><strong class="text-white block" x-text="item.label + ':'"></strong> <span class="text-gray-400" x-text="item.text"></span></li>
+                                                </template>
+                                            </ul>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <!-- Impact Tab -->
+                            <div x-show="tab === 'impact'" x-cloak class="animate-fade-in">
+                                <div class="bg-gray-800/80 p-8 md:p-12 rounded-3xl border border-gray-700/60 mb-12 shadow-card">
+                                    <h3 class="text-2xl md:text-3xl font-bold mb-3 tracking-tight text-white" x-text="content.dashboard.tabs.impact.title"></h3>
+                                    <p class="text-base md:text-lg font-semibold text-emerald-400 mb-4" x-text="content.dashboard.tabs.impact.subtitle"></p>
+                                    <p class="text-gray-300 leading-relaxed max-w-3xl text-sm md:text-base" x-text="content.dashboard.tabs.impact.description"></p>
+                                </div>
+
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <template x-for="(card, i) in content.dashboard.tabs.impact.cards" :key="i">
+                                        <div :class="card.type === 'accent' ? 'bg-brand text-white p-8 rounded-2xl shadow-elevated border border-brand-dark' : (card.type === 'wide' ? 'bg-gray-800/80 p-8 rounded-2xl border border-gray-700/60 md:col-span-2' : 'bg-gray-800/80 p-8 rounded-2xl border border-gray-700/60')">
+                                            <h4 class="font-bold text-xl mb-6 text-white" x-text="card.title"></h4>
+                                            <div :class="card.type === 'wide' ? 'grid md:grid-cols-2 gap-6' : 'space-y-6'">
+                                                <template x-for="(item, itemIdx) in card.items" :key="itemIdx">
+                                                    <div>
+                                                        <h5 class="font-semibold mb-1 text-sm md:text-base" :class="card.type === 'accent' ? 'text-green-100' : 'text-emerald-400'" x-text="item.label"></h5>
+                                                        <p :class="card.type === 'accent' ? 'text-green-50/90 text-sm' : 'text-gray-300 text-sm'" x-text="item.text"></p>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Standardized Footer -->
+            <footer class="bg-gray-950 border-t border-gray-800 py-12 text-center text-gray-400 text-sm">
+                <div class="max-w-7xl mx-auto px-6">
+                    <p class="mb-2">© 2025 IP3 Consulting. All rights reserved.</p>
+                    <p class="text-gray-400 text-sm">
+                        <span>Institutional, Policy &amp; Public-Interest Consulting</span> | 
+                        <a href="#" class="text-green-400 hover:text-white transition">www.ip3consulting.com</a>
+                    </p>
+                </div>
+            </footer>
+
+        </div>
+    </template>
+
+    <script>
+        function appData() {
+            return {
+                tab: 'digital',
+                content: null,
+                loading: true,
+                error: false,
+                mobileMenuOpen: false,
+                videoModalOpen: false,
+                currentVideoId: '',
+                async init() {
+                    try {
+                        const response = await fetch('policy_edu.json');
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        this.content = await response.json();
+                    } catch (err) {
+                        console.error('Failed to load JSON (Are you running a local server?):', err);
+                        this.error = true;
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                openVideo(videoId) {
+                    this.currentVideoId = videoId;
+                    this.videoModalOpen = true;
+                },
+                closeVideo() {
+                    this.videoModalOpen = false;
+                    this.currentVideoId = '';
+                }
+            };
+        }
+    </script>
+</body>
+</html>

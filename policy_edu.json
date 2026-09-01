@@ -1,0 +1,152 @@
+{
+  "hero": {
+    "title": "Education and Human<br>Capacity Development",
+    "subtitle": "Transforming national education systems through data, technology, and strategic policy.",
+    "bg_image": "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80"
+  },
+  "innovative_approaches": {
+    "title": "Innovative Approaches to Teaching and Learning for the Digital Age",
+    "description": "In many ways and at most institutions, the enterprise of education is still relatively untouched by technology. Changes sometimes seem insignificant and the results disappointing. We are making a case for the transformative power of technology in learning.",
+    "button_text": "Discover Our Efforts",
+    "image": "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80"
+  },
+  "seminar": {
+    "badge": "IP3 Consulting • Online Seminar",
+    "title": "The New Education<br>in BANGLADESH 2.0",
+    "date": "March 01, 10:00 AM",
+    "subtitle": "What changes in education is needed, and will it continue evolving?",
+    "description": "Come join us in our efforts to create a more contemporary education system.",
+    "register_button": "Register Here",
+    "learn_more_button": "Learn More →",
+    "thumbnail_image": "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80",
+    "youtube_embed_id": "dQw4w9WgXcQ"
+  },
+  "articles_header": {
+    "title": "Unlocking Inclusive Green Finance in Bangladesh: A Multi-Criteria Innovation Approach for Product Design",
+    "subtitle": "Bangladesh's ESG Transition in 2025: Why It Lags India and Vietnam — and What It Can Learn from ASEAN Peers"
+  },
+  "articles": [
+    {
+      "title": "Data-driven learning tools",
+      "back_text": "Deploying data-driven tools to monitor and enhance learning outcomes in underprivileged and disaster-prone schools.",
+      "image": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80"
+    },
+    {
+      "title": "Digital Age Teaching",
+      "back_text": "Innovative Approaches to Teaching and Learning for the Digital Age.",
+      "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80"
+    },
+    {
+      "title": "Experiential Learning",
+      "back_text": "Crafting national education reforms to integrate distant and experiential learning for marginalized and vulnerable communities.",
+      "image": "https://images.unsplash.com/photo-1427504494785-319ce51d1544?auto=format&fit=crop&q=80"
+    }
+  ],
+  "dashboard": {
+    "heading": "What We Offer",
+    "subheading": "Select a category below to explore our core services and expertise.",
+    "tabs": {
+      "digital": {
+        "title": "Digital Education Transformation",
+        "subtitle": "Revolutionizing Education with Digital Innovation and Strategic Reform",
+        "description": "Our core offerings include datafication of education, mediated through technology - a transnational assemblage of people, technologies and policies that increasingly affects how national education systems are organized and managed.",
+        "highlights": [
+          "Designing and deploying data-driven tools and platforms for learning and management.",
+          "Creating technology solutions that enhance digital inclusion and bridge the access gap for underserved communities.",
+          "Developing national and institutional policies to foster a future-ready education system."
+        ],
+        "expertise": [
+          {
+            "title": "Data & Curriculum",
+            "items": [
+              {"label": "Datafication", "text": "Integrating analytics to monitor performance and optimize resources."},
+              {"label": "Curriculum Design", "text": "Developing adaptive curriculums leveraging AI."},
+              {"label": "Virtual Environments", "text": "Establishing e-learning platforms for hybrid learning."}
+            ]
+          },
+          {
+            "title": "Policy & Systems",
+            "items": [
+              {"label": "Strategic Policy", "text": "Embed Digital Education Strategy and data privacy into national policies."},
+              {"label": "Modernization", "text": "Align curricula to prepare learners for future employment."},
+              {"label": "Integration", "text": "Establishing comprehensive digital environments."}
+            ]
+          },
+          {
+            "title": "EdTech & Training",
+            "items": [
+              {"label": "EdTech Deployment", "text": "Partnering to introduce AI, AR, and VR into teaching."},
+              {"label": "Teacher Training", "text": "Equipping educators to effectively implement digital solutions."},
+              {"label": "Digital Literacy", "text": "Ensuring students have required technological competencies."}
+            ]
+          }
+        ]
+      },
+      "human": {
+        "title": "Human Capacity Development",
+        "subtitle": "Empowering Individuals, Strengthening Institutions",
+        "description": "IP3 Consulting believes that human capacity development is at the heart of sustainable growth. By building the skills, knowledge, and leadership required to drive systemic change, we ensure long-term impact in education and beyond.",
+        "image": "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80",
+        "bullets": [
+          {"label": "Teacher Innovation", "text": "Pedagogical innovation and digital integration."},
+          {"label": "Leadership Excellence", "text": "Training programs to enhance governance."},
+          {"label": "Knowledge Empowerment", "text": "Facilitating workshops & knowledge-sharing."}
+        ],
+        "expertise": [
+          {
+            "title": "Leadership Training",
+            "items": [
+              {"label": "Equipping Educators", "text": "Comprehensive training programs."},
+              {"label": "Custom Modules", "text": "Focusing on digital literacy and management."}
+            ]
+          },
+          {
+            "title": "Collaborative Ecosystems",
+            "items": [
+              {"label": "Knowledge Exchange", "text": "Platforms for sharing insights."},
+              {"label": "Innovation Incubators", "text": "Collaborative hubs for co-creation."}
+            ]
+          },
+          {
+            "title": "Localized Capacity",
+            "items": [
+              {"label": "Regional Focus", "text": "Addressing specific local challenges."},
+              {"label": "Community Solutions", "text": "Engaging locals in design and implementation."}
+            ]
+          }
+        ]
+      },
+      "impact": {
+        "title": "Impact Assessment & Learning Outcomes",
+        "subtitle": "Measuring Success, Driving Continuous Improvement",
+        "description": "IP3 Consulting employs innovative methodologies and tools to assess the effectiveness of educational programs, ensuring they deliver measurable, scalable, and sustainable impact.",
+        "cards": [
+          {
+            "type": "standard",
+            "title": "Comprehensive Assessments",
+            "items": [
+              {"label": "Program Evaluation", "text": "Assessing the effectiveness of policies, programs, and interventions using rigorous methodologies."},
+              {"label": "Learning Outcomes", "text": "Developing robust metrics and indicators to track and enhance student performance."}
+            ]
+          },
+          {
+            "type": "accent",
+            "title": "Evidence-Based Decisions",
+            "items": [
+              {"label": "Data-Driven Insights", "text": "Utilizing big data, AI, and predictive analytics to inform policy adjustments and program refinements."},
+              {"label": "Systemic Reviews", "text": "Conducting in-depth evaluations of education systems to identify gaps and opportunities for improvement."}
+            ]
+          },
+          {
+            "type": "wide",
+            "title": "Real-Time Monitoring",
+            "items": [
+              {"label": "Digital Dashboards", "text": "Developing real-time data platforms for program monitoring and performance tracking."},
+              {"label": "Adaptive Learning", "text": "Using continuous feedback mechanisms to ensure education systems remain agile and responsive."}
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

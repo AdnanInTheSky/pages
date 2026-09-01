@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institutional Effectiveness & Digital Governance | IP3 Consulting</title>
+    
+    <!-- Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Unified Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            light: '#e8f5ed',
+                            DEFAULT: '#0F7645',
+                            dark: '#0a4f2e',
+                            900: '#052e1a',
+                        },
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'card': '0 10px 30px -5px rgba(0, 0, 0, 0.06)',
+                        'elevated': '0 20px 40px -10px rgba(0, 0, 0, 0.12)',
+                    }
+                }
+            }
+        }
+
+        // Setup Alpine Fetch Logic
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('policyDataApp', () => ({
+                data: null,
+                loading: true,
+                error: false,
+                mobileMenuOpen: false,
+                async init() {
+                    try {
+                        const res = await fetch('policy_data.json');
+                        if (!res.ok) throw new Error('Network response was not ok');
+                        this.data = await res.json();
+                    } catch (err) {
+                        console.error('Failed to load JSON (Are you running a local web server?):', err);
+                        this.error = true;
+                    } finally {
+                        this.loading = false;
+                    }
+                }
+            }));
+        });
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        [x-cloak] { display: none !important; }
+
+        /* Glassmorphism Header */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        /* 3D Flip Card System */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .card-flip-transition {
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 9999px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Card Hover Lift */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Text Balance */
+        .text-balance { text-wrap: balance; }
+
+        /* Fade in */
+        .animate-fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased selection:bg-brand selection:text-white"
+      x-data="policyDataApp"
+      x-init="init()">
+
+    <!-- Loading State -->
+    <div x-show="loading" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
+        <div class="flex flex-col items-center gap-4">
+            <div class="w-12 h-12 border-4 border-brand/20 border-t-brand rounded-full animate-spin"></div>
+            <div class="text-lg font-semibold text-brand animate-pulse">Loading Application Data...</div>
+        </div>
+    </div>
+
+    <!-- CORS / Network Error State -->
+    <div x-show="error" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center text-center px-6" x-cloak>
+        <div class="max-w-md bg-red-50 border border-red-200 rounded-3xl p-8 shadow-card">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+            <h2 class="text-2xl font-bold text-red-600 mb-3">Unable to Load Data</h2>
+            <p class="text-gray-600 text-sm leading-relaxed mb-6">Failed to fetch <code class="bg-red-100/60 text-red-700 px-1.5 py-0.5 rounded text-xs font-mono">policy_data.json</code>. If viewing directly from your file system (<code class="text-xs font-mono">file://</code>), browser security prevents direct JSON reading. Please launch via a local web server (e.g. Live Server or Python http.server).</p>
+            <button @click="location.reload()" class="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-full transition shadow-sm">Retry</button>
+        </div>
+    </div>
+
+    <div x-show="!loading && data" x-cloak>
+        
+        <!-- Standardized Glass Navigation Bar -->
+        <nav class="glass-nav sticky top-0 z-50 border-b border-gray-200/70">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                <a href="#" class="text-2xl font-extrabold tracking-tight text-gray-900 flex items-center gap-1.5">
+                    <span>IP3</span><span class="text-brand">Consulting</span>
+                </a>
+                
+                <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
+                    <a href="#" class="hover:text-brand transition">Home</a>
+                    <a href="#" class="hover:text-brand transition">About Us</a>
+                    <a href="#" class="hover:text-brand transition">Focus Areas</a>
+                    <a href="#" class="hover:text-brand transition">Our Services</a>
+                    <a href="#" class="hover:text-brand transition">IP3 People</a>
+                    <a href="#boxed-slider" class="bg-brand text-white px-5 py-2.5 rounded-full hover:bg-brand-dark transition shadow-sm font-semibold">Contact</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden relative">
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-700 hover:text-brand focus:outline-none p-2" aria-label="Toggle navigation">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                    <div x-show="mobileMenuOpen" 
+                         @click.outside="mobileMenuOpen = false" 
+                         x-transition
+                         class="absolute top-12 right-0 w-60 bg-white border border-gray-100 rounded-2xl shadow-xl p-4 space-y-2 text-sm font-medium text-gray-700 z-50">
+                        <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Home</a>
+                        <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">About Us</a>
+                        <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Focus Areas</a>
+                        <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Our Services</a>
+                        <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">IP3 People</a>
+                        <a href="#boxed-slider" class="block py-2.5 px-3 rounded-xl bg-brand text-white text-center font-semibold mt-2">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Standardized Hero Section -->
+        <section class="relative w-full min-h-[75vh] py-32 md:py-40 flex items-center justify-center overflow-hidden bg-gray-900">
+            <img :src="data.hero.bgImage" alt="Hero Background" class="absolute inset-0 w-full h-full object-cover opacity-30">
+            <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/70 to-gray-900/90"></div>
+            
+            <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6 leading-tight">
+                    <span x-text="data.hero.titleLine1"></span><br />
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-300 to-teal-200" x-text="data.hero.titleLine2"></span>
+                </h1>
+                <p class="mt-4 text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-10 font-normal leading-relaxed text-balance" x-text="data.hero.subtitle"></p>
+                <a href="#boxed-slider" class="inline-flex items-center justify-center px-8 py-3.5 text-base font-semibold text-gray-900 bg-white rounded-full shadow-elevated hover:bg-green-50 hover:scale-105 transition-all duration-200">
+                    <svg class="w-5 h-5 mr-2 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                    <span x-text="data.hero.ctaText"></span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Focus Areas Slider Section -->
+        <section id="boxed-slider" class="py-24 bg-gray-100 border-b border-gray-200">
+            <div class="max-w-6xl mx-auto px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Featured Highlights</span>
+                    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">Core Focus Areas</h2>
+                </div>
+                
+                <div x-data="{ activeSlide: 0 }" class="relative w-full bg-white rounded-[2rem] shadow-card overflow-hidden border border-gray-200/80 min-h-[520px] lg:h-[500px]">
+                    
+                    <div class="flex h-full transition-transform duration-500 ease-in-out" :style="`transform: translateX(-${activeSlide * 100}%)`">
+                        <template x-for="slide in data.slider" :key="slide.title">
+                            <div class="w-full h-full flex-shrink-0 flex flex-col-reverse" :class="slide.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'">
+                                <div class="lg:w-1/2 p-8 lg:p-14 flex flex-col justify-center bg-white h-full">
+                                    <p x-show="slide.tag" class="text-xs font-bold text-brand uppercase tracking-widest mb-3" x-text="slide.tag"></p>
+                                    <h3 class="text-2xl lg:text-3xl font-bold tracking-tight text-gray-900 mb-4" x-text="slide.title"></h3>
+                                    <p class="text-gray-600 leading-relaxed text-base" x-text="slide.description"></p>
+                                </div>
+                                <div class="lg:w-1/2 h-64 lg:h-full bg-gray-200 relative overflow-hidden">
+                                    <img :src="slide.image" :alt="slide.title" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Slider Controls -->
+                    <button @click="activeSlide = activeSlide === 0 ? data.slider.length - 1 : activeSlide - 1" 
+                            class="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 backdrop-blur-md shadow-md border border-gray-200 hover:bg-white transition text-gray-800 focus:outline-none focus:ring-2 focus:ring-brand"
+                            aria-label="Previous Slide">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <button @click="activeSlide = activeSlide === data.slider.length - 1 ? 0 : activeSlide + 1" 
+                            class="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 backdrop-blur-md shadow-md border border-gray-200 hover:bg-white transition text-gray-800 focus:outline-none focus:ring-2 focus:ring-brand"
+                            aria-label="Next Slide">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+
+                    <!-- Indicators -->
+                    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center space-x-2 bg-white/70 backdrop-blur-md px-4 py-2 rounded-full shadow-sm border border-gray-200/50">
+                        <template x-for="(slide, index) in data.slider" :key="index">
+                            <button @click="activeSlide = index" 
+                                    class="h-2.5 rounded-full transition-all duration-300 focus:outline-none" 
+                                    :class="activeSlide === index ? 'bg-brand w-7' : 'bg-gray-300 hover:bg-gray-400 w-2.5'"
+                                    :aria-label="`Go to slide ${index + 1}`"></button>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Strategic Framework Section -->
+        <section class="py-24 md:py-32 bg-white">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <div class="text-center mb-20">
+                    <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Methodology & Execution</span>
+                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight mb-4 text-gray-900">Strategic Framework</h2>
+                    <p class="text-lg text-gray-500 max-w-2xl mx-auto">Tap or click cards to reveal detailed methodologies.</p>
+                </div>
+
+                <div class="space-y-20">
+                    <template x-for="item in data.framework" :key="item.title">
+                        
+                        <div class="flex flex-col items-center gap-10 lg:gap-14" :class="item.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'">
+                            
+                            <!-- Framework Image -->
+                            <div class="lg:w-1/2 w-full h-[450px] lg:h-[480px] rounded-[2rem] overflow-hidden shadow-card border border-gray-100">
+                                <img :src="item.image" :alt="item.title" class="w-full h-full object-cover card-hover">
+                            </div>
+                            
+                            <!-- Interactive 3D Flip Card -->
+                            <div class="lg:w-1/2 w-full">
+                                <div x-data="{ flip: false }" @click="flip = !flip" class="perspective-1000 w-full h-[450px] lg:h-[480px] cursor-pointer group">
+                                    <div class="relative w-full h-full card-flip-transition transform-style-3d shadow-card rounded-[2rem]" :class="flip ? 'rotate-y-180' : ''">
+                                        
+                                        <!-- Card Front -->
+                                        <div class="absolute inset-0 backface-hidden bg-gray-50 rounded-[2rem] p-8 lg:p-12 flex flex-col items-center justify-center text-center border border-gray-200/80 group-hover:border-brand transition-colors">
+                                            <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-6 text-brand shadow-sm border border-gray-100">
+                                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                            </div>
+                                            <h3 class="text-3xl font-bold text-gray-900 mb-3" x-text="item.title"></h3>
+                                            <p class="text-gray-600 font-medium mb-8 text-base" x-text="item.subtitle"></p>
+                                            <span class="text-xs font-semibold text-brand uppercase tracking-widest flex items-center gap-2 bg-brand/10 px-4 py-2 rounded-full">
+                                                Tap to read details <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                            </span>
+                                        </div>
+                                        
+                                        <!-- Card Back -->
+                                        <div class="absolute inset-0 backface-hidden bg-brand text-white rounded-[2rem] p-8 lg:p-10 rotate-y-180 flex flex-col overflow-y-auto custom-scroll shadow-elevated border border-brand-dark">
+                                            <div class="flex items-center justify-between border-b border-white/20 pb-4 mb-6">
+                                                <h3 class="text-2xl font-bold" x-text="item.title + ' Strategy'"></h3>
+                                                <span class="text-xs font-medium bg-white/20 text-white px-2.5 py-1 rounded-full">Methodology</span>
+                                            </div>
+                                            <div class="space-y-6">
+                                                <template x-for="section in item.sections">
+                                                    <div>
+                                                        <h4 class="font-bold text-lg mb-2 text-green-200" x-text="section.heading"></h4>
+                                                        <ul class="list-disc pl-5 space-y-1.5 text-sm text-green-50/90 leading-relaxed">
+                                                            <template x-for="point in section.points">
+                                                                <li x-text="point"></li>
+                                                            </template>
+                                                        </ul>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <!-- Standardized Footer -->
+        <footer class="bg-gray-900 border-t border-gray-800 py-12 text-center text-gray-400 text-sm">
+            <div class="max-w-7xl mx-auto px-6">
+                <p class="mb-2">© 2025 IP3 Consulting. All rights reserved.</p>
+                <p class="text-gray-400 text-sm">
+                    <span>Institutional, Policy &amp; Public-Interest Consulting</span> | 
+                    <a href="#" class="text-green-400 hover:text-white transition">www.ip3consulting.com</a>
+                </p>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>

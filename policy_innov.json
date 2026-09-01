@@ -1,0 +1,212 @@
+{
+  "nav": {
+    "brand": "IP3",
+    "brandSpan": "Consulting",
+    "links": ["Home", "About Us", "Focus Areas", "Our Services", "IP3 People"],
+    "cta": "Contact"
+  },
+  "hero": {
+    "title": "Public Policy Innovation <br class=\"hidden md:block\">and Action Research",
+    "subtitle": "Driving Evidence-Based Insights and Innovative Strategies to Shape Policies that Foster Inclusive Growth, Educational Reform, and Sustainable Environmental Stewardship.",
+    "cta": "EXPLORE OUR SERVICES",
+    "bgImage": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=1920"
+  },
+  "coreOfferings": {
+    "title": "Our Core Offerings",
+    "subtitle": "Bridging the gap between high-level ideas and impactful outcomes.",
+    "items": [
+      {
+        "title": "Policy Research and Analysis Tailored to Your Needs",
+        "description": "Policymakers often face the challenge of turning ambitious visions into tangible results. At IP3 Consulting, we specialize in bridging the gap between high-level ideas and impactful outcomes. By integrating people-centric and planet-conscious approaches into economic and development policies, we deliver clear, data-driven insights and bespoke solutions that drive sustainable transformation.",
+        "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=800",
+        "reverse": false
+      },
+      {
+        "title": "Influencing Policy and Driving Transformative Programming",
+        "description": "From conceptualization to implementation, we turn bold ideas into meaningful change by transforming rigorous evidence into actionable policies and programs. Our approach combines cutting-edge methodologies, stakeholder-inclusive frameworks, and strategic collaboration with decision-makers. We empower governments, donors, and organizations to navigate complex challenges with innovative, scalable solutions that create measurable, long term impact.",
+        "image": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800",
+        "reverse": true
+      }
+    ]
+  },
+  "benefits": {
+    "title": "Your Benefits",
+    "subtitle": "Empowering decision-makers with clarity, confidence, and actionable insights.",
+    "items": [
+      {
+        "title": "Informed Decisions",
+        "frontHover": "Hover to read more",
+        "backText": "We help our clients explore the effects of existing policies and projecting the broader societal impacts of proposed policy frameworks. Our team employs rigorous methodologies, leveraging advanced data analytics, systems thinking, and stakeholder engagement to conduct in-depth studies that inform long-term strategic decision-making.",
+        "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "title": "Policy Impact",
+        "frontHover": "Hover to read more",
+        "backText": "We cater to decision-makers who require immediate, evidence-based insights to tackle pressing public policy challenges. We systematically compare policy alternatives, conduct economic, financial, and environmental cost-benefit analyses, and project the impacts of various options to support informed decision-making under tight time constraints.",
+        "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "title": "Actionable Insights",
+        "frontHover": "Hover to read more",
+        "backText": "We bridge the gap between policy research and policy analysis to provide actionable insights for a diverse range of clients. From policy development to regulation, economic analysis to service design and delivery, our consultants are experienced across the full suite of government functions.",
+        "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800"
+      }
+    ]
+  },
+  "dashboard": {
+    "title": "Policy Research and Analysis<br>Tailored to Your Need",
+    "subtitle": "Our services address critical areas of policy design, regulation, evaluation, and economic analysis, integrating cutting-edge methodologies with deep sectoral insights. Select an area below.",
+    "tabs": [
+      {
+        "id": "development",
+        "label": "Policy Development",
+        "title": "Policy Development: Crafting with Innovative Solutions",
+        "description": "We assist governments and organizations in conceptualizing, drafting, and implementing forward-thinking policies. By utilizing evidence-based frameworks, we ensure that new policies are actionable, inclusive, and tailored to meet both immediate needs and long-term strategic objectives.",
+        "image": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=1000",
+        "features": []
+      },
+      {
+        "id": "regulation",
+        "label": "Regulation",
+        "title": "Regulation: Enabling Transparent and Efficient Governance",
+        "description": "Regulation underpins thriving economies and societies. We help governments and regulators develop, reform, and implement policies that safeguard citizens, ensure business efficiency, and reduce bureaucratic burdens.",
+        "image": "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1000",
+        "features": [
+          {"title": "Regulatory design and strategic reforms", "desc": "We craft evidence-based regulatory frameworks that enhance compliance, streamline processes, and promote economic competitiveness."},
+          {"title": "Frameworks for Transparent Governance", "desc": "Our approach ensures accountability, minimizes bureaucratic inefficiencies, and fosters public trust in governance structures."},
+          {"title": "Balanced Solutions", "desc": "We develop regulations that promote business growth while safeguarding environmental sustainability, social equity, and consumer protection."}
+        ]
+      },
+      {
+        "id": "evaluation",
+        "label": "Evaluation",
+        "title": "Evaluation: Measuring Impact, Driving Improvement",
+        "description": "Our robust evaluation frameworks offer governments and organizations the tools to assess program performance and refine implementation strategies. Using cutting-edge data analysis and ethical engagement practices, we ensure results inform impactful decision-making.",
+        "image": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=1000",
+        "features": [
+          {"title": "Design and Implementation of Monitoring Frameworks", "desc": "We develop customized monitoring and evaluation (M&E) systems that track progress, measure effectiveness, and provide actionable insights for continuous improvement."},
+          {"title": "In-depth Impact Assessments and Strategic Reviews", "desc": "Our team conducts rigorous evaluations using qualitative and quantitative methodologies to assess the long-term effectiveness and scalability of policies and programs."},
+          {"title": "Data Modeling to Evaluate Effectiveness", "desc": "Leveraging advanced analytics, AI-driven tools, and econometric models, we quantify the success of interventions, helping policymakers make data-driven adjustments."}
+        ]
+      },
+      {
+        "id": "economic",
+        "label": "Economic Analysis",
+        "title": "Economic Analysis: Decision-Making with new economic thinking",
+        "description": "Economic uncertainty demands rigorous analysis to inform public sector decisions. We apply tailored economic methodologies to evaluate the outcomes of policies, investments, and programs, providing the evidence leaders need to move forward confidently.",
+        "image": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=1000",
+        "features": [
+          {"title": "Cost-Benefit Analysis and Outcome Quantification", "desc": "We assess the economic feasibility and long-term impact of policies and projects, helping decision-makers allocate resources efficiently and maximize returns."},
+          {"title": "Problem-Solving Through Economic Modeling", "desc": "Our experts use advanced economic modeling techniques, including predictive analytics and scenario planning, to simulate policy outcomes and anticipate future challenges."},
+          {"title": "Data-Driven Solutions to Advance Public Agendas", "desc": "By integrating big data analytics and real-time market insights, we provide evidence-based recommendations that drive inclusive economic growth, sustainability, and resilience."}
+        ]
+      }
+    ]
+  },
+  "influenceIntro": {
+    "title": "Influencing Policy and Driving Transformative Programming",
+    "subtitle": "Bridging Research and Real-World Impact",
+    "image": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=1200",
+    "description": "At IP3 Consulting, we transform rigorous research into actionable policies and programs that drive meaningful impact. Leveraging data-driven insights, cutting-edge methodologies, and collaborative partnerships, we bridge the gap between policy development and on-the-ground implementation. Our expertise enables governments, donors, and organizations to address complex challenges with innovative, scalable, and sustainable solutions."
+  },
+  "influenceSlider": {
+    "title": "OUR APPROACH TO POLICY INFLUENCE",
+    "slides": [
+      {
+        "step": "Step 01",
+        "title": "Evidence-Based Policymaking",
+        "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
+        "points": [
+          "Conducting robust research to identify root causes and policy gaps.",
+          "Providing actionable insights to design policies that address real-world needs.",
+          "Developing frameworks that align with global sustainability goals."
+        ]
+      },
+      {
+        "step": "Step 02",
+        "title": "Stakeholder Collaboration",
+        "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800",
+        "points": [
+          "Building inclusive platforms for dialogue among policymakers, industry leaders, and communities.",
+          "Facilitating knowledge exchange to co-create impactful policies and programs.",
+          "Ensuring participatory governance for equitable and transparent decision-making."
+        ]
+      },
+      {
+        "step": "Step 03",
+        "title": "Policy Experimentation and Adaptation",
+        "image": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800",
+        "points": [
+          "Designing pilot programs to test innovative policy approaches.",
+          "Utilizing adaptive management to refine policies based on real-time data and feedback.",
+          "Scaling successful interventions for broader societal impact."
+        ]
+      }
+    ]
+  },
+  "programmingSlider": {
+    "title": "OUR APPROACH TO POLICY PROGRAMMING",
+    "slides": [
+      {
+        "step": "Phase 01",
+        "title": "Policy Research and Analysis",
+        "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
+        "points": [
+          "Conducting in-depth policy studies to inform decision-making.",
+          "Evaluating policy impacts using advanced data analytics and scenario modeling."
+        ]
+      },
+      {
+        "step": "Phase 02",
+        "title": "Capacity Building for Policymakers",
+        "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800",
+        "points": [
+          "Training government officials and institutional leaders in policy formulation and implementation.",
+          "Developing tools and methodologies for continuous learning and improvement."
+        ]
+      },
+      {
+        "step": "Phase 03",
+        "title": "Program Design and Implementation",
+        "image": "https://images.unsplash.com/photo-1542744173-05336fcc7ad4?auto=format&fit=crop&q=80&w=800",
+        "points": [
+          "Designing evidence-based programs tailored to client goals and contexts.",
+          "Supporting execution with on-ground expertise and stakeholder engagement."
+        ]
+      },
+      {
+        "step": "Phase 04",
+        "title": "Monitoring, Evaluation, and Learning (MEL)",
+        "image": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800",
+        "points": [
+          "Establishing frameworks to track and evaluate policy and program effectiveness.",
+          "Driving adaptive management through feedback loops and actionable insights."
+        ]
+      }
+    ]
+  },
+  "whyChoose": {
+    "title": "Why Choose IP3 for Policy Innovation?",
+    "image": "https://images.unsplash.com/photo-1542744173-05336fcc7ad4?auto=format&fit=crop&q=80&w=800",
+    "items": [
+      {
+        "title": "Bridging Policy and Practice",
+        "desc": "Our approach goes beyond theoretical frameworks. By integrating policy research, stakeholder collaboration, and practical execution, we deliver policies that work in real-world contexts. IP3 brings cutting-edge tools and methodologies to transform policies into actionable solutions that address critical issues like growth, inequality, sustainability, and resilience."
+      },
+      {
+        "title": "Customization and Local Contexts",
+        "desc": "One-size-fits-all policies fail to create meaningful change. IP3 designs tailored strategies that reflect the unique socio-economic, political, and environmental realities of each project. Whether working with governments, private organizations, or development partners, we ensure our solutions align with both local contexts and global best practices."
+      },
+      {
+        "title": "Innovation-Driven Policy Development",
+        "desc": "We leverage breakthrough technologies, such as AI-powered data analytics and predictive modeling, to inform policymaking. This ensures our clients stay ahead of trends, enabling smarter decisions and more effective governance. From conceptualizing ambitious reforms to executing them seamlessly, IP3 turns big ideas into measurable results."
+      }
+    ]
+  },
+  "footer": {
+    "copyright": "© 2026 IP3 Consulting Limited – Institute for Public Policy and Practice. All rights reserved.",
+    "tagline": "Strategic Policy & Practice for a Sustainable Future",
+    "urlText": "www.ip3-bd.org",
+    "url": "http://www.ip3-bd.org"
+  }
+}
