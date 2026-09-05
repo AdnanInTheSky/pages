@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Action, Sustainability Analysis and Solutions | IP3 Consulting</title>
+    
+    <!-- Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP CDN for Physics & Card Fan Animation per silde.md -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <!-- Card Fan Animation Component -->
+    <script src="card-fan.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Unified Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            light: '#e8f5ed',
+                            DEFAULT: '#0F7645',
+                            dark: '#0a4f2e',
+                            900: '#052e1a',
+                        },
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'card': '0 10px 30px -5px rgba(0, 0, 0, 0.06)',
+                        'elevated': '0 20px 40px -10px rgba(0, 0, 0, 0.12)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            /* Brand Accents */
+            --color-accent-primary: #EF715A;
+            --color-accent-hover: #E05E47;
+            --color-accent-gold: #F59E0B;
+
+            /* Backgrounds & Surfaces */
+            --bg-canvas: #0E1A22;
+            --bg-surface-card: #12202B;
+            --bg-surface-active: #152735;
+
+            /* Typography */
+            --text-primary: #F3F0E8;
+            --text-secondary: #AEB0AE;
+            --text-muted: #5A6267;
+
+            /* Structural */
+            --border-default: #3C3F45;
+        }
+
+        /* Token Utility Helpers */
+        .bg-canvas { background-color: var(--bg-canvas); }
+        .bg-surface-card { background-color: var(--bg-surface-card); }
+        .bg-surface-active { background-color: var(--bg-surface-active); }
+        .text-token-primary { color: var(--text-primary); }
+        .text-token-secondary { color: var(--text-secondary); }
+        .text-token-muted { color: var(--text-muted); }
+        .border-token-default { border-color: var(--border-default); }
+        .bg-accent-primary { background-color: var(--color-accent-primary); }
+        .bg-accent-hover { background-color: var(--color-accent-hover); }
+        .bg-accent-gold { background-color: var(--color-accent-gold); }
+        .text-accent-primary { color: var(--color-accent-primary); }
+        .text-accent-gold { color: var(--color-accent-gold); }
+        .border-accent-primary { border-color: var(--color-accent-primary); }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        [x-cloak] { display: none !important; }
+
+        /* Glassmorphism Header */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        /* 3D Flip Card System */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .group:hover .group-hover\:rotate-y-180 { transform: rotateY(180deg); }
+        .card-flip-transition {
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 9999px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Card Hover Lift */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Text Balance */
+        .text-balance { text-wrap: balance; }
+
+        /* Fade in */
+        .animate-fade-in { animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased selection:bg-brand selection:text-white" x-data="{ mobileMenuOpen: false }">
+
+    <!-- Standardized Glass Navigation Bar -->
+    <nav class="glass-nav sticky top-0 z-50 border-b border-gray-200/70">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="poilicy_eco.html" class="text-2xl font-extrabold tracking-tight text-gray-900 flex items-center gap-1.5">
+                <span>IP3</span><span class="text-brand">Consulting</span>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
+                <a href="#climate-focus" class="hover:text-brand transition">Climate Focus</a>
+
+                <!-- Focus Areas Dropdown -->
+                <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                    <button @click="open = !open" class="flex items-center gap-1.5 hover:text-brand transition py-1 font-medium focus:outline-none">
+                        <span>Focus Areas</span>
+                        <svg class="w-4 h-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div x-show="open" 
+                         x-cloak 
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
+                         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                         x-transition:leave-end="opacity-0 scale-95 -translate-y-2"
+                         class="absolute left-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-elevated border border-gray-100 py-3 z-50 text-xs font-medium text-gray-700">
+                        <div class="px-4 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">All Practice Areas</div>
+                        <a href="poilicy_eco.html" class="flex items-center gap-2.5 px-4 py-2.5 hover:bg-brand/5 hover:text-brand transition">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>Economic &amp; Environmental Assessment</span>
+                        </a>
+                        <a href="policy_data.html" class="flex items-center gap-2.5 px-4 py-2.5 hover:bg-brand/5 hover:text-brand transition">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>Institutional Effectiveness &amp; Digital Governance</span>
+                        </a>
+                        <a href="policy_design.html" class="flex items-center gap-2.5 px-4 py-2.5 hover:bg-brand/5 hover:text-brand transition">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>Program &amp; Survey Design, Management</span>
+                        </a>
+                        <a href="policy_edu.html" class="flex items-center gap-2.5 px-4 py-2.5 hover:bg-brand/5 hover:text-brand transition">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>Education &amp; Human Capacity Development</span>
+                        </a>
+                        <a href="policy_innov.html" class="flex items-center gap-2.5 px-4 py-2.5 hover:bg-brand/5 hover:text-brand transition">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>Public Policy Innovation &amp; Action Research</span>
+                        </a>
+                        <a href="policy_mon.html" class="flex items-center gap-2.5 px-4 py-2.5 hover:bg-brand/5 hover:text-brand transition">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>Monitoring &amp; Evaluation (MERLA)</span>
+                        </a>
+                        <a href="test.html" class="flex items-center gap-2.5 px-4 py-2.5 bg-brand/10 text-brand font-semibold transition">
+                            <span class="w-2 h-2 rounded-full bg-brand"></span>
+                            <span>Climate Action &amp; Sustainability Solutions</span>
+                        </a>
+                    </div>
+                </div>
+
+                <a href="#esg-services" class="hover:text-brand transition">ESG Services</a>
+                <a href="#additional-services" class="hover:text-brand transition">Additional Services</a>
+                <a href="#contact" class="hover:text-brand transition">Why IP3</a>
+                <a href="#contact" class="bg-brand text-white px-5 py-2.5 rounded-full hover:bg-brand-dark transition shadow-sm font-semibold">Contact</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden relative">
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-700 hover:text-brand focus:outline-none p-2" aria-label="Toggle navigation">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <div x-show="mobileMenuOpen" 
+                     @click.outside="mobileMenuOpen = false" 
+                     x-transition
+                     class="absolute top-12 right-0 w-72 bg-white border border-gray-100 rounded-2xl shadow-xl p-4 space-y-2 text-sm font-medium text-gray-700 z-50">
+                    <a href="#climate-focus" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Climate Focus</a>
+                    
+                    <div x-data="{ mobileFocusOpen: false }">
+                        <button @click="mobileFocusOpen = !mobileFocusOpen" class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">
+                            <span>Focus Areas</span>
+                            <svg class="w-4 h-4 transition-transform" :class="mobileFocusOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div x-show="mobileFocusOpen" class="pl-4 space-y-1 mt-1 border-l-2 border-brand/20 ml-3 text-xs">
+                            <a href="poilicy_eco.html" class="block py-1.5 px-2 rounded-lg hover:text-brand">Economic Assessment</a>
+                            <a href="policy_data.html" class="block py-1.5 px-2 rounded-lg hover:text-brand">Digital Governance</a>
+                            <a href="policy_design.html" class="block py-1.5 px-2 rounded-lg hover:text-brand">Program &amp; Survey Design</a>
+                            <a href="policy_edu.html" class="block py-1.5 px-2 rounded-lg hover:text-brand">Education &amp; Capacity</a>
+                            <a href="policy_innov.html" class="block py-1.5 px-2 rounded-lg hover:text-brand">Policy Innovation</a>
+                            <a href="policy_mon.html" class="block py-1.5 px-2 rounded-lg hover:text-brand">MERLA Solutions</a>
+                            <a href="test.html" class="block py-1.5 px-2 rounded-lg font-semibold text-brand bg-brand/10">Climate Action</a>
+                        </div>
+                    </div>
+
+                    <a href="#esg-services" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">ESG Services</a>
+                    <a href="#additional-services" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Additional Services</a>
+                    <a href="#contact" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Why IP3</a>
+                    <a href="#contact" class="block py-2.5 px-3 rounded-xl bg-brand text-white text-center font-semibold mt-2">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Standardized Hero Section -->
+    <header class="relative w-full min-h-[70vh] py-32 md:py-40 flex items-center justify-center overflow-hidden bg-gray-900">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/70 to-gray-900/90"></div>
+        
+        <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
+            <span class="text-xs font-bold text-green-300 uppercase tracking-widest bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full inline-block mb-6 border border-white/20">
+                Sustainability & Resilience
+            </span>
+            <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-white uppercase tracking-tight font-sans drop-shadow-2xl leading-tight text-balance mb-6">
+                CLIMATE ACTION, SUSTAINABILITY ANALYSIS AND <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-300 to-teal-200">SOLUTIONS</span>
+            </h1>
+            <p class="text-lg md:text-xl font-medium text-emerald-300 mb-4 max-w-3xl mx-auto leading-relaxed">
+                Empowering Sustainable Growth with Climate Action Strategies and Solutions
+            </p>
+            <p class="text-sm md:text-base text-gray-300 max-w-2xl mx-auto mb-8 leading-relaxed">
+                Advising to the governments, corporates, and financial institutions on climate and sustainability.
+            </p>
+            <div class="flex justify-center">
+                <a href="#climate-focus" class="inline-flex items-center justify-center px-8 py-3.5 bg-brand text-white text-base font-semibold rounded-full hover:bg-brand-dark transition-all duration-200 shadow-elevated hover:scale-105">
+                    Explore Climate Focus
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- OUR CLIMATE FOCUS with Card Fan Animation per silde.md -->
+    <section id="climate-focus" class="max-w-7xl mx-auto py-24 px-6 border-b border-gray-200 overflow-hidden">
+        <div class="text-center mb-12">
+            <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Strategic Pillars</span>
+            <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4">OUR CLIMATE FOCUS</h2>
+            <p class="max-w-2xl mx-auto text-base md:text-lg text-gray-600 leading-relaxed">
+                Interactive physical card deck fan — hover cards to pull them from the deck, or use controls/touch to explore our green transition policies, regenerative practices, and sustainability market integration.
+            </p>
+        </div>
+
+        <!-- Card Fan Animation Component -->
+        <div x-data="cardFanSlider({
+            items: [
+                {
+                    tag: 'Policy Frameworks',
+                    title: 'Green Transition Policy & Governance',
+                    description: 'Designing inclusive policies and governance frameworks that drive equitable, nature-positive, and resilient climate transitions for a sustainable future.',
+                    image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=600&q=80'
+                },
+                {
+                    tag: 'Regenerative Economy',
+                    title: 'Circularity & Regenerative Pathways',
+                    description: 'Advancing circular and regenerative economic pathways to build resilient, resource-efficient, and sustainable closed-loop industrial systems.',
+                    image: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=600&q=80'
+                },
+                {
+                    tag: 'Global Integration',
+                    title: 'Sustainable Market Solutions & Green Finance',
+                    description: 'Empowering businesses, governments, and financial institutions with data-driven strategies to align sustainability efforts with global standards.',
+                    image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80'
+                }
+            ],
+            theme: 'light'
+        })" 
+        @keydown.left.prevent="previousCard()"
+        @keydown.right.prevent="nextCard()"
+        @keydown.home.prevent="selectCard(0)"
+        @keydown.end.prevent="selectCard(totalItems - 1)"
+        tabindex="0"
+        role="region"
+        aria-label="Interactive Card Fan Carousel"
+        class="relative w-full select-none focus:outline-none">
+            
+            <!-- Stage and Desktop Arrows Wrapper -->
+            <div class="relative w-full flex items-center justify-center">
+                
+                <!-- Desktop Previous Button (Left of Card Fan) -->
+                <button type="button"
+                        @click="previousCard()"
+                        :disabled="totalItems <= 1"
+                        aria-label="Previous card"
+                        class="hidden md:flex absolute left-2 lg:left-6 xl:left-8 top-1/2 -translate-y-1/2 z-50 w-12 h-12 rounded-full items-center justify-center bg-white/80 backdrop-blur-md border border-gray-200/80 shadow-card hover:shadow-elevated hover:scale-105 active:scale-95 transition-all text-gray-800 disabled:opacity-40 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-brand cursor-pointer">
+                    <svg class="w-5 h-5 -translate-x-0.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+
+                <!-- Fan Stage Container -->
+                <div @mouseleave="onStageLeave()"
+                     @touchstart="onTouchStart($event)"
+                     @touchend="onTouchEnd($event)"
+                     class="relative mx-auto w-full h-[480px] sm:h-[520px] md:h-[560px] lg:h-[580px] flex items-center justify-center overflow-visible">
+                    
+                    <!-- Center Anchor Point -->
+                    <div class="relative w-0 h-0 flex items-center justify-center">
+                        <template x-for="(item, index) in items" :key="index">
+                            <div :data-index="index"
+                                 @mouseenter="onCardHover(index)"
+                                 @mouseleave="onCardLeave(index)"
+                                 @click="selectCard(index)"
+                                 class="card-fan-item absolute left-0 top-0 w-[280px] sm:w-[320px] md:w-[350px] lg:w-[380px] rounded-[2rem] overflow-hidden shadow-elevated border border-gray-200/90 bg-white text-gray-900 cursor-pointer will-change-transform select-none">
+                                
+                                <div class="relative aspect-[16/10] overflow-hidden bg-gray-100">
+                                    <img :src="item.image" :alt="item.title" class="w-full h-full object-cover pointer-events-none">
+                                    <span class="absolute top-4 left-4 bg-brand text-white text-xs font-bold px-3 py-1 rounded-full shadow-md backdrop-blur-md"
+                                          x-text="item.tag"></span>
+                                </div>
+
+                                <div class="p-6 md:p-8 flex flex-col justify-between">
+                                    <h3 class="font-bold text-lg md:text-xl leading-snug mb-3 tracking-tight text-gray-900" x-text="item.title"></h3>
+                                    <p class="text-xs md:text-sm text-gray-600 leading-relaxed mb-4 line-clamp-3"
+                                       x-text="item.description"></p>
+                                    
+                                    <div class="pt-3 border-t border-gray-100 flex items-center justify-between">
+                                        <span class="text-xs font-bold uppercase tracking-widest text-brand inline-flex items-center gap-1">
+                                            Climate Pillar <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                        </span>
+                                        <span class="text-[11px] font-semibold text-gray-400" x-text="`${index + 1} / ${totalItems}`"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Desktop Next Button (Right of Card Fan) -->
+                <button type="button"
+                        @click="nextCard()"
+                        :disabled="totalItems <= 1"
+                        aria-label="Next card"
+                        class="hidden md:flex absolute right-2 lg:right-6 xl:right-8 top-1/2 -translate-y-1/2 z-50 w-12 h-12 rounded-full items-center justify-center bg-white/80 backdrop-blur-md border border-gray-200/80 shadow-card hover:shadow-elevated hover:scale-105 active:scale-95 transition-all text-gray-800 disabled:opacity-40 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-brand cursor-pointer">
+                    <svg class="w-5 h-5 translate-x-0.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+
+            <!-- Navigation Controls (Mobile Arrows + Indicators) -->
+            <div class="flex items-center justify-center gap-4 mt-8">
+                <!-- Mobile Previous Button -->
+                <button type="button"
+                        @click="previousCard()" 
+                        :disabled="totalItems <= 1"
+                        aria-label="Previous card"
+                        class="md:hidden w-11 h-11 rounded-full flex items-center justify-center bg-white/80 backdrop-blur-md border border-gray-200/80 shadow-card active:scale-95 transition-all text-gray-800 disabled:opacity-40 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-brand cursor-pointer">
+                    <svg class="w-5 h-5 -translate-x-0.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+
+                <!-- Indicators -->
+                <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 backdrop-blur-sm border border-black/5">
+                    <template x-for="(item, idx) in items" :key="idx">
+                        <button @click="selectCard(idx)" 
+                                :aria-label="`Card ${idx + 1}`"
+                                class="h-2.5 rounded-full transition-all duration-300 focus:outline-none"
+                                :class="selectedIndex === idx ? 'w-8 bg-brand' : 'w-2.5 bg-gray-300 hover:bg-gray-400'"></button>
+                    </template>
+                </div>
+
+                <!-- Mobile Next Button -->
+                <button type="button"
+                        @click="nextCard()" 
+                        :disabled="totalItems <= 1"
+                        aria-label="Next card"
+                        class="md:hidden w-11 h-11 rounded-full flex items-center justify-center bg-white/80 backdrop-blur-md border border-gray-200/80 shadow-card active:scale-95 transition-all text-gray-800 disabled:opacity-40 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-brand cursor-pointer">
+                    <svg class="w-5 h-5 translate-x-0.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- OUR ESG SERVICES — Standardized Black Dashboard -->
+    <section id="esg-services" class="bg-gray-900 py-24 px-6 border-b border-gray-800" x-data="{ tab: 'environmental' }">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-xs font-bold text-green-300 uppercase tracking-widest bg-white/10 px-3.5 py-1.5 rounded-full inline-block mb-3 border border-white/10">Service Matrix</span>
+                <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4">OUR ESG SERVICES</h2>
+            </div>
+            
+            <!-- Standardized Black Dashboard Container -->
+            <div class="flex flex-col lg:flex-row rounded-[2rem] overflow-hidden border border-gray-800 shadow-elevated bg-gray-900 min-h-[560px]">
+                
+                <!-- Sidebar Tabs Navigation -->
+                <div class="w-full lg:w-1/3 bg-gray-900/95 border-b lg:border-b-0 lg:border-r border-gray-800 p-6 flex flex-col gap-3 z-10">
+                    <button @click="tab = 'environmental'" 
+                            :class="tab === 'environmental' ? 'bg-brand text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white'" 
+                            class="text-left px-5 py-4 rounded-xl font-semibold transition-all duration-200 flex items-center justify-between group text-sm md:text-base">
+                        <span>Environmental Services</span>
+                        <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity hidden lg:block" :class="tab === 'environmental' ? '!opacity-100 text-white' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                    <button @click="tab = 'social'" 
+                            :class="tab === 'social' ? 'bg-brand text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white'" 
+                            class="text-left px-5 py-4 rounded-xl font-semibold transition-all duration-200 flex items-center justify-between group text-sm md:text-base">
+                        <span>Social Services</span>
+                        <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity hidden lg:block" :class="tab === 'social' ? '!opacity-100 text-white' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                    <button @click="tab = 'governance'" 
+                            :class="tab === 'governance' ? 'bg-brand text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white'" 
+                            class="text-left px-5 py-4 rounded-xl font-semibold transition-all duration-200 flex items-center justify-between group text-sm md:text-base">
+                        <span>Governance Services</span>
+                        <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity hidden lg:block" :class="tab === 'governance' ? '!opacity-100 text-white' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Dashboard Content Panes -->
+                <div class="w-full lg:w-2/3 p-8 lg:p-12 bg-gray-800/80 text-white relative">
+                    
+                    <!-- Environmental Tab -->
+                    <div x-show="tab === 'environmental'" x-cloak x-transition.opacity class="animate-fade-in space-y-6">
+                        <div class="aspect-video w-full rounded-2xl overflow-hidden mb-6 shadow-lg border border-gray-700 max-h-52">
+                            <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80" alt="Environmental Services" class="w-full h-full object-cover">
+                        </div>
+                        <p class="text-base text-gray-300 leading-relaxed font-medium">Our environmental services are designed to help businesses minimize their ecological footprint while maximizing resource efficiency. We offer a range of solutions that address the pressing environmental challenges facing Bangladesh:</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-700/60">
+                                <h4 class="font-bold text-emerald-300 text-base mb-1.5">Climate Change Policies</h4>
+                                <p class="text-xs md:text-sm text-gray-400 leading-relaxed">Developing and implementing ESG strategies that mitigate climate change impacts by focusing on reducing carbon emissions and enhancing resilience to environmental risks.</p>
+                            </div>
+                            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-700/60">
+                                <h4 class="font-bold text-emerald-300 text-base mb-1.5">Resource Optimization</h4>
+                                <p class="text-xs md:text-sm text-gray-400 leading-relaxed">Working with businesses to enhance the efficiency of water, energy, & raw materials in production processes, driving cost savings and sustainability.</p>
+                            </div>
+                            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-700/60">
+                                <h4 class="font-bold text-emerald-300 text-base mb-1.5">Waste Management</h4>
+                                <p class="text-xs md:text-sm text-gray-400 leading-relaxed">Implementing waste reduction, recycling, and responsible disposal strategies to minimize environmental impact, helping companies move towards a zero-waste model.</p>
+                            </div>
+                            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-700/60">
+                                <h4 class="font-bold text-emerald-300 text-base mb-1.5">Pollution Control</h4>
+                                <p class="text-xs md:text-sm text-gray-400 leading-relaxed">Developing and deploying measures to control air and water pollution, including cutting-edge emission reduction technologies and water treatment systems.</p>
+                            </div>
+                            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-700/60">
+                                <h4 class="font-bold text-emerald-300 text-base mb-1.5">Sustainable Sourcing</h4>
+                                <p class="text-xs md:text-sm text-gray-400 leading-relaxed">Promoting sustainable procurement practices, ensuring that companies source materials in an eco-friendly and socially responsible manner.</p>
+                            </div>
+                            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-700/60">
+                                <h4 class="font-bold text-emerald-300 text-base mb-1.5">Biodiversity Conservation</h4>
+                                <p class="text-xs md:text-sm text-gray-400 leading-relaxed">Our team designs and implements programs to protect and restore natural habitats, supporting biodiversity conservation efforts in Bangladesh.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Tab -->
+                    <div x-show="tab === 'social'" x-cloak x-transition.opacity class="animate-fade-in space-y-6">
+                        <div class="aspect-video w-full rounded-2xl overflow-hidden mb-6 shadow-lg border border-gray-700 max-h-52">
+                            <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=80" alt="Social Services" class="w-full h-full object-cover">
+                        </div>
+                        <p class="text-base text-gray-300 leading-relaxed font-medium">We understand that social responsibility is a critical component of sustainable business practices. Our social services focus on enhancing labor standards, community relations, and overall social impact.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-700/60">
+                                <h4 class="font-bold text-emerald-300 text-base mb-1.5">Labor Standards and Employee Engagement</h4>
+                                <p class="text-xs md:text-sm text-gray-400 leading-relaxed">We help businesses ensure fair labor practices, safe working conditions, and employee well-being programs, fostering a motivated and productive workforce.</p>
+                            </div>
+                            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-700/60">
+                                <h4 class="font-bold text-emerald-300 text-base mb-1.5">Community Relations</h4>
+                                <p class="text-xs md:text-sm text-gray-400 leading-relaxed">We develop strategies for meaningful community engagement, building strong relationships that support local development and enhance corporate reputation.</p>
+                            </div>
+                            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-700/60">
+                                <h4 class="font-bold text-emerald-300 text-base mb-1.5">Corporate Social Responsibility (CSR)</h4>
+                                <p class="text-xs md:text-sm text-gray-400 leading-relaxed">We design and manage impactful CSR initiatives that contribute to the welfare of local communities, aligning business goals with social development.</p>
+                            </div>
+                            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-700/60">
+                                <h4 class="font-bold text-emerald-300 text-base mb-1.5">Customer Satisfaction and Data Privacy</h4>
+                                <p class="text-xs md:text-sm text-gray-400 leading-relaxed">We implement best practices to protect customer data and ensure high levels of satisfaction through transparent and ethical business practices.</p>
+                            </div>
+                            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-700/60 md:col-span-2">
+                                <h4 class="font-bold text-emerald-300 text-base mb-1.5">Diversity and Inclusion</h4>
+                                <p class="text-xs md:text-sm text-gray-400 leading-relaxed">Our services promote gender diversity, inclusion, and equal opportunities within organizations, helping businesses build a more inclusive workplace.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Governance Tab -->
+                    <div x-show="tab === 'governance'" x-cloak x-transition.opacity class="animate-fade-in space-y-6">
+                        <div class="aspect-video w-full rounded-2xl overflow-hidden mb-6 shadow-lg border border-gray-700 max-h-52">
+                            <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80" alt="Governance Services" class="w-full h-full object-cover">
+                        </div>
+                        <p class="text-base text-gray-300 leading-relaxed font-medium">Strong governance is essential for sustainable growth. Our governance services are designed to enhance transparency, accountability, and ethical business practices:</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-700/60">
+                                <h4 class="font-bold text-emerald-300 text-base mb-1.5">Transparency and Reporting</h4>
+                                <p class="text-xs md:text-sm text-gray-400 leading-relaxed">We develop comprehensive ESG reporting frameworks aligned with global standards, ensuring transparency and accountability in business operations.</p>
+                            </div>
+                            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-700/60">
+                                <h4 class="font-bold text-emerald-300 text-base mb-1.5">Board Composition and Leadership</h4>
+                                <p class="text-xs md:text-sm text-gray-400 leading-relaxed">We provide expert advice on board diversity, independence, and effective governance structures, strengthening leadership at the highest levels.</p>
+                            </div>
+                            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-700/60">
+                                <h4 class="font-bold text-emerald-300 text-base mb-1.5">Anti-corruption and Ethics</h4>
+                                <p class="text-xs md:text-sm text-gray-400 leading-relaxed">We help businesses implement robust anti-corruption policies and ethical guidelines to prevent fraud and unethical behavior.</p>
+                            </div>
+                            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-700/60">
+                                <h4 class="font-bold text-emerald-300 text-base mb-1.5">Regulatory Compliance</h4>
+                                <p class="text-xs md:text-sm text-gray-400 leading-relaxed">Our services ensure that businesses adhere to both local and international regulations, including mandatory ESG disclosures, safeguarding against legal and reputational risks.</p>
+                            </div>
+                            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-700/60 md:col-span-2">
+                                <h4 class="font-bold text-emerald-300 text-base mb-1.5">Stakeholder Engagement</h4>
+                                <p class="text-xs md:text-sm text-gray-400 leading-relaxed">We facilitate effective communication and engagement with all stakeholders, including shareholders, employees, customers, and regulators, fostering trust and long-term relationships.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ADDITIONAL SERVICES — Standardized Apple Cards -->
+    <section id="additional-services" class="max-w-7xl mx-auto py-24 px-6 border-b border-gray-200">
+        <div class="text-center mb-16">
+            <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Expanded Capabilities</span>
+            <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4">ADDITIONAL SERVICES</h2>
+            <p class="text-center text-gray-600 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">Beyond the core areas of environmental, social, and governance services, we offer a range of additional services to support your business's sustainability journey:</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white p-8 rounded-[2rem] shadow-card border border-gray-200/80 card-hover flex flex-col">
+                <div class="w-12 h-12 rounded-2xl bg-brand/10 text-brand flex items-center justify-center mb-5 font-bold">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h4 class="font-bold text-xl text-gray-900 mb-3">ESG Strategy Development</h4>
+                <p class="text-gray-600 text-sm md:text-base leading-relaxed">We craft tailored ESG strategies that align with your company's goals and stakeholder expectations, positioning your business as a leader in sustainability.</p>
+            </div>
+            
+            <div class="bg-white p-8 rounded-[2rem] shadow-card border border-gray-200/80 card-hover flex flex-col">
+                <div class="w-12 h-12 rounded-2xl bg-brand/10 text-brand flex items-center justify-center mb-5 font-bold">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                </div>
+                <h4 class="font-bold text-xl text-gray-900 mb-3">Impact Assessment</h4>
+                <p class="text-gray-600 text-sm md:text-base leading-relaxed">Our team conducts thorough ESG impact assessments to identify areas for improvement and measure the effectiveness of your sustainability initiatives.</p>
+            </div>
+            
+            <div class="bg-white p-8 rounded-[2rem] shadow-card border border-gray-200/80 card-hover flex flex-col">
+                <div class="w-12 h-12 rounded-2xl bg-brand/10 text-brand flex items-center justify-center mb-5 font-bold">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                </div>
+                <h4 class="font-bold text-xl text-gray-900 mb-3">Training and Capacity Building</h4>
+                <p class="text-gray-600 text-sm md:text-base leading-relaxed">We offer training programs to enhance the ESG knowledge and skills of your employees and management, ensuring your team is equipped to drive sustainable practices.</p>
+            </div>
+            
+            <div class="bg-white p-8 rounded-[2rem] shadow-card border border-gray-200/80 card-hover flex flex-col">
+                <div class="w-12 h-12 rounded-2xl bg-brand/10 text-brand flex items-center justify-center mb-5 font-bold">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                </div>
+                <h4 class="font-bold text-xl text-gray-900 mb-3">Technology Integration</h4>
+                <p class="text-gray-600 text-sm md:text-base leading-relaxed">We leverage latest digital tools and technologies to enhance ESG data collection, analysis, & reporting, providing you with actionable insights for continuous improvement.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CALL TO ACTION / PARTNER WITH US -->
+    <section id="contact" class="bg-gray-900 text-white py-24 px-6 text-center relative overflow-hidden border-b border-gray-800">
+        <div class="absolute -top-24 -left-24 w-80 h-80 bg-brand/15 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-24 -right-24 w-80 h-80 bg-brand/15 rounded-full blur-3xl"></div>
+
+        <div class="max-w-3xl mx-auto relative z-10">
+            <span class="text-xs font-bold text-green-300 uppercase tracking-widest bg-white/10 px-3.5 py-1.5 rounded-full inline-block mb-4 border border-white/10">Next Steps</span>
+            <h2 class="text-3xl md:text-5xl font-bold mb-6 text-white tracking-tight">Partner with Us for a <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-300 to-teal-200">Sustainable Future</span></h2>
+            <p class="mb-6 text-gray-300 text-base md:text-lg leading-relaxed">Bangladesh stands at a critical juncture in its journey towards sustainable development. At IP3 Consulting, we are committed to supporting your business in this transition, providing the expertise, tools, and strategies needed to integrate ESG principles into your core operations.</p>
+            <p class="font-semibold text-emerald-300 mb-8 text-base md:text-lg">Together, we can ensure long-term sustainable growth that benefits your business, the environment, and society as a whole.</p>
+            <div>
+                <a href="#climate-focus" class="inline-flex items-center justify-center px-8 py-3.5 bg-brand text-white text-base font-semibold rounded-full hover:bg-brand-dark transition-all duration-200 shadow-elevated hover:scale-105">
+                    Contact Our Team
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Standardized Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 py-12 text-center text-gray-400 text-sm">
+        <div class="max-w-7xl mx-auto px-6">
+            <p class="mb-2">© 2026 IP3 Consulting Limited — Institute for Public Policy and Practice. All rights reserved.</p>
+            <p class="text-gray-400 text-sm">
+                <span>Strategic Policy &amp; Management Solutions for a Sustainable Future</span> | 
+                <a href="https://www.ip3-bd.org" class="text-green-400 hover:text-white transition">www.ip3-bd.org</a>
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>

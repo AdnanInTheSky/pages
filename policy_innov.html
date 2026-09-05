@@ -13,6 +13,12 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- GSAP CDN for Physics & Card Fan Animation per silde.md -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <!-- Card Fan Animation Component -->
+    <script src="card-fan.js"></script>
+
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -33,6 +39,20 @@
                             dark: '#0a4f2e',
                             900: '#052e1a',
                         },
+                        accent: {
+                            primary: 'var(--color-accent-primary)',
+                            hover: 'var(--color-accent-hover)',
+                            gold: 'var(--color-accent-gold)',
+                        },
+                        canvas: 'var(--bg-canvas)',
+                        surface: {
+                            card: 'var(--bg-surface-card)',
+                            active: 'var(--bg-surface-active)',
+                        },
+                        'text-primary': 'var(--text-primary)',
+                        'text-secondary': 'var(--text-secondary)',
+                        'text-muted': 'var(--text-muted)',
+                        'border-default': 'var(--border-default)',
                     },
                     boxShadow: {
                         'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
@@ -42,31 +62,278 @@
                 }
             }
         }
-        
-        // Setup Alpine Fetch Logic
+
+        // Inlined Data for Instant Offline Execution
+        const defaultInnovData = {
+            nav: {
+                brand: "IP3",
+                brandSpan: "Consulting",
+                links: ["Home", "About Us", "Focus Areas", "Our Services", "IP3 People"],
+                cta: "Contact"
+            },
+            hero: {
+                title: "Public Policy Innovation <br class=\"hidden md:block\">and Action Research",
+                subtitle: "Driving Evidence-Based Insights and Innovative Strategies to Shape Policies that Foster Inclusive Growth, Educational Reform, and Sustainable Environmental Stewardship.",
+                cta: "Explore Our Services",
+                bgImage: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=1920"
+            },
+            coreOfferings: {
+                title: "Our Core Offerings",
+                subtitle: "Bridging the gap between high-level ideas and impactful outcomes.",
+                items: [
+                    {
+                        title: "Policy Research and Analysis Tailored to Your Needs",
+                        description: "Policymakers often face the challenge of turning ambitious visions into tangible results. At IP3 Consulting, we specialize in bridging the gap between high-level ideas and impactful outcomes. By integrating people-centric and planet-conscious approaches into economic and development policies, we deliver clear, data-driven insights and bespoke solutions that drive sustainable transformation.",
+                        image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=800",
+                        reverse: false
+                    },
+                    {
+                        title: "Influencing Policy and Driving Transformative Programming",
+                        description: "From conceptualization to implementation, we turn bold ideas into meaningful change by transforming rigorous evidence into actionable policies and programs. Our approach combines cutting-edge methodologies, stakeholder-inclusive frameworks, and strategic collaboration with decision-makers. We empower governments, donors, and organizations to navigate complex challenges with innovative, scalable solutions that create measurable, long term impact.",
+                        image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800",
+                        reverse: true
+                    }
+                ]
+            },
+            benefits: {
+                title: "Your Benefits",
+                subtitle: "Empowering decision-makers with clarity, confidence, and actionable insights.",
+                items: [
+                    {
+                        title: "Informed Decisions",
+                        frontHover: "Hover to read more",
+                        backText: "We help our clients explore the effects of existing policies and projecting the broader societal impacts of proposed policy frameworks. Our team employs rigorous methodologies, leveraging advanced data analytics, systems thinking, and stakeholder engagement to conduct in-depth studies that inform long-term strategic decision-making.",
+                        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800"
+                    },
+                    {
+                        title: "Policy Impact",
+                        frontHover: "Hover to read more",
+                        backText: "We cater to decision-makers who require immediate, evidence-based insights to tackle pressing public policy challenges. We systematically compare policy alternatives, conduct economic, financial, and environmental cost-benefit analyses, and project the impacts of various options to support informed decision-making under tight time constraints.",
+                        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"
+                    },
+                    {
+                        title: "Actionable Insights",
+                        frontHover: "Hover to read more",
+                        backText: "We bridge the gap between policy research and policy analysis to provide actionable insights for a diverse range of clients. From policy development to regulation, economic analysis to service design and delivery, our consultants are experienced across the full suite of government functions.",
+                        image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800"
+                    }
+                ]
+            },
+            dashboard: {
+                title: "Policy Research and Analysis<br>Tailored to Your Need",
+                subtitle: "Our services address critical areas of policy design, regulation, evaluation, and economic analysis, integrating cutting-edge methodologies with deep sectoral insights. Select an area below.",
+                tabs: [
+                    {
+                        id: "development",
+                        label: "Policy Development",
+                        title: "Policy Development: Crafting with Innovative Solutions",
+                        description: "We assist governments and organizations in conceptualizing, drafting, and implementing forward-thinking policies. By utilizing evidence-based frameworks, we ensure that new policies are actionable, inclusive, and tailored to meet both immediate needs and long-term strategic objectives.",
+                        image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=1000",
+                        features: [
+                            {title: "Strategic Problem Formulation", desc: "Diagnosing complex public sector challenges to formulate clear, evidence-informed policy goals."},
+                            {title: "Inclusive Design Frameworks", desc: "Engaging multi-sector stakeholders to ensure policies are practical, equitable, and sustainable."},
+                            {title: "Implementation Roadmapping", desc: "Designing phased rollouts with governance structures, resource allocation, and accountability metrics."}
+                        ]
+                    },
+                    {
+                        id: "regulation",
+                        label: "Regulation",
+                        title: "Regulation: Enabling Transparent and Efficient Governance",
+                        description: "Regulation underpins thriving economies and societies. We help governments and regulators develop, reform, and implement policies that safeguard citizens, ensure business efficiency, and reduce bureaucratic burdens.",
+                        image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1000",
+                        features: [
+                            {title: "Regulatory design and strategic reforms", desc: "We craft evidence-based regulatory frameworks that enhance compliance, streamline processes, and promote economic competitiveness."},
+                            {title: "Frameworks for Transparent Governance", desc: "Our approach ensures accountability, minimizes bureaucratic inefficiencies, and fosters public trust in governance structures."},
+                            {title: "Balanced Solutions", desc: "We develop regulations that promote business growth while safeguarding environmental sustainability, social equity, and consumer protection."}
+                        ]
+                    },
+                    {
+                        id: "evaluation",
+                        label: "Evaluation",
+                        title: "Evaluation: Measuring Impact, Driving Improvement",
+                        description: "Our robust evaluation frameworks offer governments and organizations the tools to assess program performance and refine implementation strategies. Using cutting-edge data analysis and ethical engagement practices, we ensure results inform impactful decision-making.",
+                        image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=1000",
+                        features: [
+                            {title: "Design and Implementation of Monitoring Frameworks", desc: "We develop customized monitoring and evaluation (M&E) systems that track progress, measure effectiveness, and provide actionable insights for continuous improvement."},
+                            {title: "In-depth Impact Assessments and Strategic Reviews", desc: "Our team conducts rigorous evaluations using qualitative and quantitative methodologies to assess the long-term effectiveness and scalability of policies and programs."},
+                            {title: "Data Modeling to Evaluate Effectiveness", desc: "Leveraging advanced analytics, AI-driven tools, and econometric models, we quantify the success of interventions, helping policymakers make data-driven adjustments."}
+                        ]
+                    },
+                    {
+                        id: "economic",
+                        label: "Economic Analysis",
+                        title: "Economic Analysis: Decision-Making with new economic thinking",
+                        description: "Economic uncertainty demands rigorous analysis to inform public sector decisions. We apply tailored economic methodologies to evaluate the outcomes of policies, investments, and programs, providing the evidence leaders need to move forward confidently.",
+                        image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=1000",
+                        features: [
+                            {title: "Cost-Benefit Analysis and Outcome Quantification", desc: "We assess the economic feasibility and long-term impact of policies and projects, helping decision-makers allocate resources efficiently and maximize returns."},
+                            {title: "Problem-Solving Through Economic Modeling", desc: "Our experts use advanced economic modeling techniques, including predictive analytics and scenario planning, to simulate policy outcomes and anticipate future challenges."},
+                            {title: "Data-Driven Solutions to Advance Public Agendas", desc: "By integrating big data analytics and real-time market insights, we provide evidence-based recommendations that drive inclusive economic growth, sustainability, and resilience."}
+                        ]
+                    }
+                ]
+            },
+            influenceIntro: {
+                title: "Influencing Policy and Driving Transformative Programming",
+                subtitle: "Bridging Research and Real-World Impact",
+                image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=1200",
+                description: "At IP3 Consulting, we transform rigorous research into actionable policies and programs that drive meaningful impact. Leveraging data-driven insights, cutting-edge methodologies, and collaborative partnerships, we bridge the gap between policy development and on-the-ground implementation. Our expertise enables governments, donors, and organizations to address complex challenges with innovative, scalable, and sustainable solutions."
+            },
+            influenceSlider: {
+                title: "OUR APPROACH TO POLICY INFLUENCE",
+                slides: [
+                    {
+                        step: "Step 01",
+                        title: "Evidence-Based Policymaking",
+                        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
+                        points: [
+                            "Conducting robust research to identify root causes and policy gaps.",
+                            "Providing actionable insights to design policies that address real-world needs.",
+                            "Developing frameworks that align with global sustainability goals."
+                        ]
+                    },
+                    {
+                        step: "Step 02",
+                        title: "Stakeholder Collaboration",
+                        image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800",
+                        points: [
+                            "Building inclusive platforms for dialogue among policymakers, industry leaders, and communities.",
+                            "Facilitating knowledge exchange to co-create impactful policies and programs.",
+                            "Ensuring participatory governance for equitable and transparent decision-making."
+                        ]
+                    },
+                    {
+                        step: "Step 03",
+                        title: "Policy Experimentation and Adaptation",
+                        image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800",
+                        points: [
+                            "Designing pilot programs to test innovative policy approaches.",
+                            "Utilizing adaptive management to refine policies based on real-time data and feedback.",
+                            "Scaling successful interventions for broader societal impact."
+                        ]
+                    }
+                ]
+            },
+            programmingSlider: {
+                title: "OUR APPROACH TO POLICY PROGRAMMING",
+                slides: [
+                    {
+                        step: "Phase 01",
+                        title: "Policy Research and Analysis",
+                        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
+                        points: [
+                            "Conducting in-depth policy studies to inform decision-making.",
+                            "Evaluating policy impacts using advanced data analytics and scenario modeling."
+                        ]
+                    },
+                    {
+                        step: "Phase 02",
+                        title: "Capacity Building for Policymakers",
+                        image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800",
+                        points: [
+                            "Training government officials and institutional leaders in policy formulation and implementation.",
+                            "Developing tools and methodologies for continuous learning and improvement."
+                        ]
+                    },
+                    {
+                        step: "Phase 03",
+                        title: "Program Design and Implementation",
+                        image: "https://images.unsplash.com/photo-1542744173-05336fcc7ad4?auto=format&fit=crop&q=80&w=800",
+                        points: [
+                            "Designing evidence-based programs tailored to client goals and contexts.",
+                            "Supporting execution with on-ground expertise and stakeholder engagement."
+                        ]
+                    },
+                    {
+                        step: "Phase 04",
+                        title: "Monitoring, Evaluation, and Learning (MEL)",
+                        image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800",
+                        points: [
+                            "Establishing frameworks to track and evaluate policy and program effectiveness.",
+                            "Driving adaptive management through feedback loops and actionable insights."
+                        ]
+                    }
+                ]
+            },
+            whyChoose: {
+                title: "Why Choose IP3 for Policy Innovation?",
+                image: "https://images.unsplash.com/photo-1542744173-05336fcc7ad4?auto=format&fit=crop&q=80&w=800",
+                items: [
+                    {
+                        title: "Bridging Policy and Practice",
+                        desc: "Our approach goes beyond theoretical frameworks. By integrating policy research, stakeholder collaboration, and practical execution, we deliver policies that work in real-world contexts. IP3 brings cutting-edge tools and methodologies to transform policies into actionable solutions that address critical issues like growth, inequality, sustainability, and resilience."
+                    },
+                    {
+                        title: "Customization and Local Contexts",
+                        desc: "One-size-fits-all policies fail to create meaningful change. IP3 designs tailored strategies that reflect the unique socio-economic, political, and environmental realities of each project. Whether working with governments, private organizations, or development partners, we ensure our solutions align with both local contexts and global best practices."
+                    },
+                    {
+                        title: "Innovation-Driven Policy Development",
+                        desc: "We leverage breakthrough technologies, such as AI-powered data analytics and predictive modeling, to inform policymaking. This ensures our clients stay ahead of trends, enabling smarter decisions and more effective governance. From conceptualizing ambitious reforms to executing them seamlessly, IP3 turns big ideas into measurable results."
+                    }
+                ]
+            }
+        };
+
         document.addEventListener('alpine:init', () => {
             Alpine.data('siteData', () => ({
-                content: null,
-                loading: true,
-                error: false,
+                content: defaultInnovData,
                 mobileMenuOpen: false,
+                activeTab: 'development',
+                currentSlide: 0,
+                programSlide: 0,
                 async init() {
-                    try {
-                        const res = await fetch('policy_innov.json');
-                        if (!res.ok) throw new Error('Network response was not ok');
-                        this.content = await res.json();
-                    } catch (err) {
-                        console.error("Failed to load JSON (Are you running a local server?): ", err);
-                        this.error = true;
-                    } finally {
-                        this.loading = false;
+                    if (window.location.protocol.startsWith('http')) {
+                        try {
+                            const res = await fetch('policy_innov.json');
+                            if (res.ok) {
+                                this.content = await res.json();
+                            }
+                        } catch (err) {
+                            // Keep default data
+                        }
                     }
                 }
-            }))
-        })
+            }));
+        });
     </script>
-    
+
     <style>
+        :root {
+            /* Brand Accents */
+            --color-accent-primary: #EF715A;
+            --color-accent-hover: #E05E47;
+            --color-accent-gold: #F59E0B;
+
+            /* Backgrounds & Surfaces */
+            --bg-canvas: #0E1A22;
+            --bg-surface-card: #12202B;
+            --bg-surface-active: #152735;
+
+            /* Typography */
+            --text-primary: #F3F0E8;
+            --text-secondary: #AEB0AE;
+            --text-muted: #5A6267;
+
+            /* Structural */
+            --border-default: #3C3F45;
+        }
+
+        /* Token Utility Helpers */
+        .bg-canvas { background-color: var(--bg-canvas); }
+        .bg-surface-card { background-color: var(--bg-surface-card); }
+        .bg-surface-active { background-color: var(--bg-surface-active); }
+        .text-token-primary { color: var(--text-primary); }
+        .text-token-secondary { color: var(--text-secondary); }
+        .text-token-muted { color: var(--text-muted); }
+        .border-token-default { border-color: var(--border-default); }
+        .bg-accent-primary { background-color: var(--color-accent-primary); }
+        .bg-accent-hover { background-color: var(--color-accent-hover); }
+        .bg-accent-gold { background-color: var(--color-accent-gold); }
+        .text-accent-primary { color: var(--color-accent-primary); }
+        .text-accent-gold { color: var(--color-accent-gold); }
+        .border-accent-primary { border-color: var(--color-accent-primary); }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-font-smoothing: antialiased;
@@ -82,20 +349,35 @@
         }
 
         /* 3D Flip Card System */
-        .perspective-1000 { perspective: 1000px; }
-        .transform-style-3d { transform-style: preserve-3d; }
+        .perspective-1000 {
+            perspective: 1000px;
+            -webkit-perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
+        }
         .backface-hidden {
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
         }
-        .rotate-y-180 { transform: rotateY(180deg); }
-        .group:hover .group-hover\:rotate-y-180 { transform: rotateY(180deg); }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+        }
+        .group:hover .group-hover\:rotate-y-180,
+        .group.is-flipped .group-hover\:rotate-y-180,
+        .group-hover\:rotate-y-180.is-flipped {
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+        }
         .card-flip-transition {
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
         }
 
         /* Custom Scrollbar */
-        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb {
             background-color: rgba(255, 255, 255, 0.3);
@@ -131,369 +413,590 @@
 </head>
 <body class="bg-gray-50 text-gray-900 antialiased selection:bg-brand selection:text-white" x-data="siteData" x-init="init()">
 
-    <!-- Loading State -->
-    <div x-show="loading" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
-        <div class="flex flex-col items-center gap-4">
-            <div class="w-12 h-12 border-4 border-brand/20 border-t-brand rounded-full animate-spin"></div>
-            <div class="text-lg font-semibold text-brand animate-pulse">Loading Application Data...</div>
-        </div>
-    </div>
-    
-    <!-- CORS / Network Error State -->
-    <div x-show="error" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center text-center px-6" x-cloak>
-        <div class="max-w-md bg-red-50 border border-red-200 rounded-3xl p-8 shadow-card">
-            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            </div>
-            <h2 class="text-2xl font-bold text-red-600 mb-3">Unable to Load Data</h2>
-            <p class="text-gray-600 text-sm leading-relaxed mb-6">Failed to fetch <code class="bg-red-100/60 text-red-700 px-1.5 py-0.5 rounded text-xs font-mono">policy_innov.json</code>. If viewing directly from your computer (<code class="text-xs font-mono">file://</code>), browser security prevents direct JSON reading. Please launch via a local web server.</p>
-            <button @click="location.reload()" class="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-full transition shadow-sm">Retry</button>
-        </div>
-    </div>
+    <!-- Standardized Glass Navigation Bar -->
+    <nav class="glass-nav sticky top-0 z-50 border-b border-gray-200/70">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="poilicy_eco.html" class="text-2xl font-extrabold tracking-tight text-gray-900 flex items-center gap-1.5">
+                <span>IP3</span><span class="text-brand">Consulting</span>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
+                <a href="#offerings" class="hover:text-brand transition">Offerings</a>
 
-    <div x-show="!loading && !error" x-cloak>
-        
-        <!-- Standardized Glass Navigation Bar -->
-        <nav class="glass-nav sticky top-0 z-50 border-b border-gray-200/70">
-            <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-                <a href="#" class="text-2xl font-extrabold tracking-tight text-gray-900 flex items-center gap-1.5">
-                    <span x-text="content.nav.brand"></span><span class="text-brand" x-text="content.nav.brandSpan"></span>
-                </a>
-                
-                <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
-                    <template x-for="link in content.nav.links" :key="link">
-                        <a href="#" class="hover:text-brand transition" x-text="link"></a>
-                    </template>
-                    <a href="#dashboard" class="bg-brand text-white px-5 py-2.5 rounded-full hover:bg-brand-dark transition shadow-sm font-semibold" x-text="content.nav.cta"></a>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <div class="md:hidden relative">
-                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-700 hover:text-brand focus:outline-none p-2" aria-label="Toggle navigation">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                            <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
+                <!-- Focus Areas Dropdown -->
+                <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                    <button @click="open = !open" class="flex items-center gap-1.5 hover:text-brand transition py-1 font-medium focus:outline-none">
+                        <span>Focus Areas</span>
+                        <svg class="w-4 h-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
-                    <div x-show="mobileMenuOpen" 
-                         @click.outside="mobileMenuOpen = false" 
-                         x-transition
-                         class="absolute top-12 right-0 w-60 bg-white border border-gray-100 rounded-2xl shadow-xl p-4 space-y-2 text-sm font-medium text-gray-700 z-50">
-                        <template x-for="link in content.nav.links" :key="link">
-                            <a href="#" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition" x-text="link"></a>
-                        </template>
-                        <a href="#dashboard" class="block py-2.5 px-3 rounded-xl bg-brand text-white text-center font-semibold mt-2" x-text="content.nav.cta"></a>
+                    <div x-show="open" 
+                         x-cloak 
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
+                         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                         x-transition:leave-end="opacity-0 scale-95 -translate-y-2"
+                         class="absolute left-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-elevated border border-gray-100 py-3 z-50 text-xs font-medium text-gray-700">
+                        <div class="px-4 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">All Practice Areas</div>
+                        <a href="poilicy_eco.html" class="flex items-center gap-2.5 px-4 py-2.5 hover:bg-brand/5 hover:text-brand transition">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>Economic &amp; Environmental Assessment</span>
+                        </a>
+                        <a href="policy_data.html" class="flex items-center gap-2.5 px-4 py-2.5 hover:bg-brand/5 hover:text-brand transition">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>Institutional Effectiveness &amp; Digital Governance</span>
+                        </a>
+                        <a href="policy_design.html" class="flex items-center gap-2.5 px-4 py-2.5 hover:bg-brand/5 hover:text-brand transition">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>Program &amp; Survey Design, Management</span>
+                        </a>
+                        <a href="policy_edu.html" class="flex items-center gap-2.5 px-4 py-2.5 hover:bg-brand/5 hover:text-brand transition">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>Education &amp; Human Capacity Development</span>
+                        </a>
+                        <a href="policy_innov.html" class="flex items-center gap-2.5 px-4 py-2.5 bg-brand/10 text-brand font-semibold transition">
+                            <span class="w-2 h-2 rounded-full bg-brand"></span>
+                            <span>Public Policy Innovation &amp; Action Research</span>
+                        </a>
+                        <a href="policy_mon.html" class="flex items-center gap-2.5 px-4 py-2.5 hover:bg-brand/5 hover:text-brand transition">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>Monitoring &amp; Evaluation (MERLA)</span>
+                        </a>
+                        <a href="test.html" class="flex items-center gap-2.5 px-4 py-2.5 hover:bg-brand/5 hover:text-brand transition">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>Climate Action &amp; Sustainability Solutions</span>
+                        </a>
                     </div>
                 </div>
-            </div>
-        </nav>
 
-        <!-- Standardized Hero Section -->
-        <section class="relative overflow-hidden py-36 md:py-48 flex items-center justify-center min-h-[75vh] bg-gray-900">
-            <img :src="content.hero.bgImage" alt="Hero Background" class="absolute inset-0 w-full h-full object-cover opacity-35">
-            <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/70 to-gray-900/90"></div>
-            
-            <div class="max-w-5xl mx-auto px-6 text-center relative z-10">
-                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6 leading-tight" x-html="content.hero.title"></h1>
-                <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed font-normal text-balance" x-text="content.hero.subtitle"></p>
-                <a href="#dashboard" class="inline-flex items-center justify-center px-8 py-3.5 bg-brand text-white text-base font-semibold rounded-full hover:bg-brand-dark transition-all duration-200 shadow-elevated shadow-brand/20">
-                    <span x-text="content.hero.cta"></span>
-                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                </a>
+                <a href="#benefits" class="hover:text-brand transition">Benefits</a>
+                <a href="#dashboard" class="hover:text-brand transition">Dashboard</a>
+                <a href="#approach" class="hover:text-brand transition">Approach</a>
+                <a href="#why-choose" class="hover:text-brand transition">Why IP3</a>
+                <a href="#contact" class="bg-brand text-white px-5 py-2.5 rounded-full hover:bg-brand-dark transition shadow-sm font-semibold">Contact</a>
             </div>
-        </section>
 
-        <!-- Core Offerings Section -->
-        <section class="py-24 bg-white">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="text-center mb-16">
-                    <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Capabilities</span>
-                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4" x-text="content.coreOfferings.title"></h2>
-                    <p class="text-gray-600 max-w-2xl mx-auto text-lg" x-text="content.coreOfferings.subtitle"></p>
-                </div>
-                
-                <div class="grid grid-cols-1 gap-12">
-                    <template x-for="item in content.coreOfferings.items" :key="item.title">
-                        <div class="card-hover flex flex-col bg-white border border-gray-200/80 rounded-[2rem] overflow-hidden shadow-card" :class="item.reverse ? 'md:flex-row-reverse' : 'md:flex-row'">
-                            <div class="md:w-1/2 bg-gray-100 relative min-h-[320px]">
-                                <img :src="item.image" :alt="item.title" class="w-full h-full object-cover">
-                            </div>
-                            <div class="md:w-1/2 p-8 md:p-14 flex flex-col justify-center">
-                                <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 tracking-tight" x-text="item.title"></h3>
-                                <p class="text-gray-600 leading-relaxed text-base" x-text="item.description"></p>
-                            </div>
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden relative">
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-700 hover:text-brand focus:outline-none p-2" aria-label="Toggle navigation">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <div x-show="mobileMenuOpen" 
+                     @click.outside="mobileMenuOpen = false" 
+                     x-transition
+                     class="absolute top-12 right-0 w-72 bg-white border border-gray-100 rounded-2xl shadow-xl p-4 space-y-2 text-sm font-medium text-gray-700 z-50">
+                    <a href="#offerings" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Offerings</a>
+                    
+                    <div x-data="{ mobileFocusOpen: false }">
+                        <button @click="mobileFocusOpen = !mobileFocusOpen" class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">
+                            <span>Focus Areas</span>
+                            <svg class="w-4 h-4 transition-transform" :class="mobileFocusOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div x-show="mobileFocusOpen" class="pl-4 space-y-1 mt-1 border-l-2 border-brand/20 ml-3 text-xs">
+                            <a href="poilicy_eco.html" class="block py-1.5 px-2 rounded-lg hover:text-brand">Economic Assessment</a>
+                            <a href="policy_data.html" class="block py-1.5 px-2 rounded-lg hover:text-brand">Digital Governance</a>
+                            <a href="policy_design.html" class="block py-1.5 px-2 rounded-lg hover:text-brand">Program &amp; Survey Design</a>
+                            <a href="policy_edu.html" class="block py-1.5 px-2 rounded-lg hover:text-brand">Education &amp; Capacity</a>
+                            <a href="policy_innov.html" class="block py-1.5 px-2 rounded-lg font-semibold text-brand bg-brand/10">Policy Innovation</a>
+                            <a href="policy_mon.html" class="block py-1.5 px-2 rounded-lg hover:text-brand">MERLA Solutions</a>
+                            <a href="test.html" class="block py-1.5 px-2 rounded-lg hover:text-brand">Climate Action</a>
                         </div>
-                    </template>
+                    </div>
+
+                    <a href="#benefits" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Benefits</a>
+                    <a href="#dashboard" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Dashboard</a>
+                    <a href="#approach" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Approach</a>
+                    <a href="#why-choose" class="block py-2 px-3 rounded-xl hover:bg-gray-50 hover:text-brand transition">Why IP3</a>
+                    <a href="#contact" class="block py-2.5 px-3 rounded-xl bg-brand text-white text-center font-semibold mt-2">Contact</a>
                 </div>
             </div>
-        </section>
+        </div>
+    </nav>
 
-        <!-- Benefits Section (3D Flip Cards) -->
-        <section class="py-24 bg-gray-50 border-t border-b border-gray-200/70">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="text-center mb-16">
-                    <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Value Proposition</span>
-                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4" x-text="content.benefits.title"></h2>
-                    <p class="text-gray-600 max-w-2xl mx-auto text-lg" x-text="content.benefits.subtitle"></p>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <template x-for="item in content.benefits.items" :key="item.title">
-                        <div class="group perspective-1000 min-h-[440px] cursor-pointer">
-                            <div class="relative w-full h-full card-flip-transition transform-style-3d group-hover:rotate-y-180 rounded-[2rem] shadow-card">
-                                
-                                <!-- Card Front -->
-                                <div class="absolute inset-0 w-full h-full bg-white rounded-[2rem] p-8 flex flex-col backface-hidden border border-gray-200/80">
-                                    <div class="aspect-[4/3] rounded-2xl mb-6 overflow-hidden bg-gray-100">
-                                        <img :src="item.image" :alt="item.title" class="w-full h-full object-cover">
-                                    </div>
-                                    <h3 class="text-2xl font-bold text-gray-900 mb-2 text-center" x-text="item.title"></h3>
-                                    <p class="text-brand text-xs uppercase tracking-widest text-center font-bold mt-auto bg-brand/10 py-1.5 px-3 rounded-full" x-text="item.frontHover"></p>
+    <!-- Standardized Hero Section -->
+    <header class="relative overflow-hidden py-36 md:py-48 flex items-center justify-center min-h-[75vh] bg-gray-900">
+        <img :src="content.hero.bgImage" alt="Hero Background" class="absolute inset-0 w-full h-full object-cover opacity-35">
+        <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/70 to-gray-900/90"></div>
+        
+        <div class="max-w-5xl mx-auto px-6 text-center relative z-10">
+            <span class="text-xs font-bold text-green-300 uppercase tracking-widest bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full inline-block mb-6 border border-white/20">
+                Policy Innovation &amp; Research
+            </span>
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6 leading-tight" x-html="content.hero.title"></h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed font-normal text-balance" x-text="content.hero.subtitle"></p>
+            <a href="#dashboard" class="inline-flex items-center justify-center px-8 py-3.5 bg-brand text-white text-base font-semibold rounded-full hover:bg-brand-dark transition-all duration-200 shadow-elevated hover:scale-105">
+                <span x-text="content.hero.cta"></span>
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+            </a>
+        </div>
+    </header>
+
+    <!-- Core Offerings Section -->
+    <section id="offerings" class="py-24 bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Capabilities</span>
+                <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4" x-text="content.coreOfferings.title"></h2>
+                <p class="text-gray-600 max-w-2xl mx-auto text-lg" x-text="content.coreOfferings.subtitle"></p>
+            </div>
+            
+            <div class="grid grid-cols-1 gap-12">
+                <template x-for="item in content.coreOfferings.items" :key="item.title">
+                    <div class="card-hover flex flex-col bg-white border border-gray-200/80 rounded-[2rem] overflow-hidden shadow-card" :class="item.reverse ? 'md:flex-row-reverse' : 'md:flex-row'">
+                        <div class="md:w-1/2 bg-gray-100 relative min-h-[320px]">
+                            <img :src="item.image" :alt="item.title" class="w-full h-full object-cover">
+                        </div>
+                        <div class="md:w-1/2 p-8 md:p-14 flex flex-col justify-center">
+                            <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 tracking-tight" x-text="item.title"></h3>
+                            <p class="text-gray-600 leading-relaxed text-base" x-text="item.description"></p>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section (3D Flip Cards) -->
+    <section id="benefits" class="py-24 bg-gray-50 border-b border-gray-200/70">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Value Proposition</span>
+                <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4" x-text="content.benefits.title"></h2>
+                <p class="text-gray-600 max-w-2xl mx-auto text-lg" x-text="content.benefits.subtitle"></p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <template x-for="item in content.benefits.items" :key="item.title">
+                    <div x-data="{ isFlipped: false }"
+                         @click="isFlipped = !isFlipped"
+                         @mouseleave="isFlipped = false"
+                         tabindex="0"
+                         role="button"
+                         :aria-label="item.title + ' - Click to flip card'"
+                         @keydown.enter.prevent="isFlipped = !isFlipped"
+                         @keydown.space.prevent="isFlipped = !isFlipped"
+                         class="group perspective-1000 h-[480px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand rounded-[2rem]">
+                        <div class="relative w-full h-full card-flip-transition transform-style-3d group-hover:rotate-y-180 rounded-[2rem] shadow-card"
+                             :class="{ 'is-flipped': isFlipped }">
+                            
+                            <!-- Card Front -->
+                            <div class="absolute inset-0 w-full h-full bg-white rounded-[2rem] p-8 flex flex-col backface-hidden border border-gray-200/80 shadow-card">
+                                <div class="aspect-[4/3] rounded-2xl mb-6 overflow-hidden bg-gray-100 shadow-inner">
+                                    <img :src="item.image" :alt="item.title" class="w-full h-full object-cover">
                                 </div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-2 text-center" x-text="item.title"></h3>
+                                <div class="mt-auto flex items-center justify-center">
+                                    <span class="text-brand text-xs uppercase tracking-widest text-center font-bold bg-brand/10 py-2 px-4 rounded-full inline-flex items-center gap-2 group-hover:bg-brand group-hover:text-white transition-colors">
+                                        <span x-text="item.frontHover"></span>
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                    </span>
+                                </div>
+                            </div>
 
-                                <!-- Card Back -->
-                                <div class="absolute inset-0 w-full h-full bg-brand text-white rounded-[2rem] p-8 flex flex-col justify-center items-center backface-hidden rotate-y-180 shadow-elevated border border-brand-dark overflow-y-auto custom-scroll">
-                                    <h3 class="text-xl font-bold text-white mb-4 border-b border-green-400/40 pb-2 w-full text-center" x-text="item.title"></h3>
+                            <!-- Card Back -->
+                            <div class="absolute inset-0 w-full h-full bg-brand text-white rounded-[2rem] p-8 flex flex-col justify-between items-center backface-hidden rotate-y-180 shadow-elevated border border-brand-dark">
+                                <div class="w-full flex-1 flex flex-col justify-center items-center overflow-y-auto custom-scroll pr-1">
+                                    <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mb-4 text-green-200 border border-white/20">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-3 border-b border-green-400/40 pb-2 w-full text-center" x-text="item.title"></h3>
                                     <p class="text-green-50 leading-relaxed text-sm text-center" x-text="item.backText"></p>
                                 </div>
+                                <div class="pt-4 border-t border-white/20 w-full flex items-center justify-center">
+                                    <span class="text-xs font-semibold text-green-200 uppercase tracking-widest inline-flex items-center gap-1.5 bg-white/10 px-3.5 py-1 rounded-full">
+                                        <span>Click or move away to flip back</span>
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </section>
+
+    <!-- Policy Research Dashboard Section -->
+    <section id="dashboard" class="py-24 bg-white text-gray-900 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6">
+            
+            <div class="mb-14 text-center max-w-3xl mx-auto">
+                <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Service Matrix</span>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4 text-gray-900 tracking-tight" x-html="content.dashboard.title"></h2>
+                <p class="text-gray-600 text-lg leading-relaxed max-w-3xl mx-auto" x-text="content.dashboard.subtitle"></p>
+            </div>
+
+            <div class="bg-gray-900 text-white rounded-[2rem] shadow-elevated border border-gray-800 overflow-hidden flex flex-col lg:flex-row min-h-[600px]">
+                
+                <!-- Sidebar Tabs -->
+                <div class="lg:w-1/3 bg-gray-900/90 border-b lg:border-b-0 lg:border-r border-gray-800 p-6 flex flex-row lg:flex-col gap-3 overflow-x-auto hide-scrollbar">
+                    <template x-for="tab in content.dashboard.tabs" :key="tab.id">
+                        <button @click="activeTab = tab.id" 
+                                :class="activeTab === tab.id ? 'bg-brand text-white shadow-md' : 'bg-transparent text-gray-400 hover:bg-gray-800 hover:text-white'"
+                                class="whitespace-nowrap lg:whitespace-normal text-left px-5 py-4 rounded-xl font-semibold transition-all flex items-center justify-between group text-sm md:text-base">
+                            <span x-text="tab.label"></span>
+                            <svg class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity hidden lg:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </template>
+                </div>
+
+                <!-- Content Tab Pane -->
+                <div class="lg:w-2/3 p-8 md:p-12 bg-gray-800/80 relative">
+                    <template x-for="tab in content.dashboard.tabs" :key="tab.id">
+                        <div x-show="activeTab === tab.id" x-transition.opacity class="animate-fade-in">
+                            <div class="aspect-video w-full rounded-2xl overflow-hidden mb-8 shadow-lg border border-gray-700">
+                                <img :src="tab.image" :alt="tab.label" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="text-2xl md:text-3xl font-bold mb-4 text-white" x-text="tab.title"></h3>
+                            <p class="text-gray-300 leading-relaxed mb-8 text-base md:text-lg" x-text="tab.description"></p>
+                            
+                            <div class="space-y-6">
+                                <template x-for="feat in tab.features" :key="feat.title">
+                                    <div class="border-l-2 border-brand pl-6">
+                                        <h4 class="text-lg md:text-xl font-semibold text-white mb-2" x-text="feat.title"></h4>
+                                        <p class="text-gray-400 text-sm leading-relaxed" x-text="feat.desc"></p>
+                                    </div>
+                                </template>
                             </div>
                         </div>
                     </template>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Policy Research Dashboard Section -->
-        <section id="dashboard" class="py-24 bg-white text-gray-900" x-data="{ activeTab: 'development' }" x-init="activeTab = content.dashboard.tabs[0].id">
-            <div class="max-w-7xl mx-auto px-6">
+    <!-- Influence Hero Banner -->
+    <section class="bg-gradient-to-br from-brand via-brand-dark to-gray-900 text-white py-24">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <span class="text-xs font-bold text-green-200 uppercase tracking-widest bg-white/10 px-3.5 py-1.5 rounded-full inline-block mb-4">Global Dialogue</span>
+            <h2 class="text-3xl md:text-5xl font-bold mb-3 tracking-tight" x-text="content.influenceIntro.title"></h2>
+            <p class="text-lg md:text-xl font-medium uppercase tracking-wide text-green-200 mb-10 opacity-90" x-text="content.influenceIntro.subtitle"></p>
+            
+            <div class="aspect-video w-full max-w-3xl mx-auto bg-gray-900 rounded-[2rem] overflow-hidden shadow-elevated mb-10 border border-white/15">
+                <img :src="content.influenceIntro.image" class="w-full h-full object-cover" alt="Conference">
+            </div>
+
+            <p class="text-base md:text-lg leading-relaxed text-green-50 px-6 max-w-4xl mx-auto" x-text="content.influenceIntro.description"></p>
+        </div>
+    </section>
+
+    <!-- Slider 1: Influence Slider (Light) with Card Fan Animation per silde.md -->
+    <section id="approach" class="py-24 bg-gray-50 border-b border-gray-200/70 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Policy In Action</span>
+                <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4" x-text="content.influenceSlider.title"></h2>
+                <p class="text-gray-500 text-sm md:text-base max-w-2xl mx-auto">
+                    Interactive physical card deck fan — hover cards to pull them from the deck, or use controls/touch to navigate through each policy influence stage.
+                </p>
+            </div>
+            
+            <!-- Card Fan Animation Component -->
+            <div x-data="cardFanSlider({
+                items: content.influenceSlider.slides,
+                theme: 'light'
+            })" 
+            @keydown.left.prevent="previousCard()"
+            @keydown.right.prevent="nextCard()"
+            @keydown.home.prevent="selectCard(0)"
+            @keydown.end.prevent="selectCard(totalItems - 1)"
+            tabindex="0"
+            role="region"
+            aria-label="Interactive Card Fan Carousel"
+            class="relative w-full select-none focus:outline-none">
                 
-                <div class="mb-14 text-center max-w-3xl mx-auto">
-                    <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Service Matrix</span>
-                    <h2 class="text-3xl md:text-5xl font-bold mb-4 text-gray-900 tracking-tight" x-html="content.dashboard.title"></h2>
-                    <p class="text-gray-600 text-lg leading-relaxed max-w-3xl mx-auto" x-text="content.dashboard.subtitle"></p>
+                <!-- Stage and Desktop Arrows Wrapper -->
+                <div class="relative w-full flex items-center justify-center">
+                    
+                    <!-- Desktop Previous Button (Left of Card Fan) -->
+                    <button type="button"
+                            @click="previousCard()"
+                            :disabled="totalItems <= 1"
+                            aria-label="Previous card"
+                            class="hidden md:flex absolute left-2 lg:left-6 xl:left-8 top-1/2 -translate-y-1/2 z-50 w-12 h-12 rounded-full items-center justify-center bg-white/80 backdrop-blur-md border border-gray-200/80 shadow-card hover:shadow-elevated hover:scale-105 active:scale-95 transition-all text-gray-800 disabled:opacity-40 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-brand cursor-pointer">
+                        <svg class="w-5 h-5 -translate-x-0.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+
+                    <!-- Fan Stage Container -->
+                    <div @mouseleave="onStageLeave()"
+                         @touchstart="onTouchStart($event)"
+                         @touchend="onTouchEnd($event)"
+                         class="relative mx-auto w-full h-[480px] sm:h-[520px] md:h-[560px] lg:h-[580px] flex items-center justify-center overflow-visible">
+                        
+                        <!-- Center Anchor Point -->
+                        <div class="relative w-0 h-0 flex items-center justify-center">
+                            <template x-for="(item, index) in items" :key="index">
+                                <div :data-index="index"
+                                     @mouseenter="onCardHover(index)"
+                                     @mouseleave="onCardLeave(index)"
+                                     @click="selectCard(index)"
+                                     class="card-fan-item absolute left-0 top-0 w-[280px] sm:w-[320px] md:w-[350px] lg:w-[380px] rounded-[2rem] overflow-hidden shadow-elevated border border-gray-200/90 bg-white text-gray-900 cursor-pointer will-change-transform select-none">
+                                    
+                                    <div class="relative aspect-[16/10] overflow-hidden bg-gray-100">
+                                        <img :src="item.image" :alt="item.title" class="w-full h-full object-cover pointer-events-none">
+                                        <span class="absolute top-4 left-4 bg-brand text-white text-xs font-bold px-3 py-1 rounded-full shadow-md backdrop-blur-md"
+                                              x-text="item.step"></span>
+                                    </div>
+
+                                    <div class="p-6 md:p-8 flex flex-col justify-between">
+                                        <h3 class="font-bold text-lg md:text-xl leading-snug mb-3 tracking-tight text-gray-900" x-text="item.title"></h3>
+                                        
+                                        <ul class="space-y-2 mb-4 text-xs md:text-sm text-gray-600">
+                                            <template x-for="(pt, idx) in (item.points || []).slice(0, 2)" :key="idx">
+                                                <li class="flex items-start gap-2 line-clamp-2">
+                                                    <span class="w-1.5 h-1.5 bg-brand rounded-full mt-1.5 flex-shrink-0"></span>
+                                                    <span x-text="pt"></span>
+                                                </li>
+                                            </template>
+                                        </ul>
+                                        
+                                        <div class="pt-3 border-t border-gray-100 flex items-center justify-between">
+                                            <span class="text-xs font-bold uppercase tracking-widest text-brand inline-flex items-center gap-1">
+                                                View Phase <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                            </span>
+                                            <span class="text-[11px] font-semibold text-gray-400" x-text="`${index + 1} / ${totalItems}`"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Desktop Next Button (Right of Card Fan) -->
+                    <button type="button"
+                            @click="nextCard()"
+                            :disabled="totalItems <= 1"
+                            aria-label="Next card"
+                            class="hidden md:flex absolute right-2 lg:right-6 xl:right-8 top-1/2 -translate-y-1/2 z-50 w-12 h-12 rounded-full items-center justify-center bg-white/80 backdrop-blur-md border border-gray-200/80 shadow-card hover:shadow-elevated hover:scale-105 active:scale-95 transition-all text-gray-800 disabled:opacity-40 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-brand cursor-pointer">
+                        <svg class="w-5 h-5 translate-x-0.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
                 </div>
 
-                <div class="bg-gray-900 text-white rounded-[2rem] shadow-elevated border border-gray-800 overflow-hidden flex flex-col lg:flex-row min-h-[600px]">
-                    
-                    <!-- Sidebar Tabs -->
-                    <div class="lg:w-1/3 bg-gray-900/90 border-b lg:border-b-0 lg:border-r border-gray-800 p-6 flex flex-row lg:flex-col gap-3 overflow-x-auto hide-scrollbar">
-                        <template x-for="tab in content.dashboard.tabs" :key="tab.id">
-                            <button @click="activeTab = tab.id" 
-                                    :class="activeTab === tab.id ? 'bg-brand text-white shadow-md' : 'bg-transparent text-gray-400 hover:bg-gray-800 hover:text-white'"
-                                    class="whitespace-nowrap lg:whitespace-normal text-left px-5 py-4 rounded-xl font-semibold transition-all flex items-center justify-between group text-sm md:text-base">
-                                <span x-text="tab.label"></span>
-                                <svg class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity hidden lg:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                            </button>
+                <!-- Navigation Controls (Mobile Arrows + Indicators) -->
+                <div class="flex items-center justify-center gap-4 mt-8">
+                    <!-- Mobile Previous Button -->
+                    <button type="button"
+                            @click="previousCard()" 
+                            :disabled="totalItems <= 1"
+                            aria-label="Previous card"
+                            class="md:hidden w-11 h-11 rounded-full flex items-center justify-center bg-white/80 backdrop-blur-md border border-gray-200/80 shadow-card active:scale-95 transition-all text-gray-800 disabled:opacity-40 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-brand cursor-pointer">
+                        <svg class="w-5 h-5 -translate-x-0.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+
+                    <!-- Indicators -->
+                    <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 backdrop-blur-sm border border-black/5">
+                        <template x-for="(item, idx) in items" :key="idx">
+                            <button @click="selectCard(idx)" 
+                                    :aria-label="`Card ${idx + 1}`"
+                                    class="h-2.5 rounded-full transition-all duration-300 focus:outline-none"
+                                    :class="selectedIndex === idx ? 'w-8 bg-brand' : 'w-2.5 bg-gray-300 hover:bg-gray-400'"></button>
                         </template>
                     </div>
 
-                    <!-- Content Tab Pane -->
-                    <div class="lg:w-2/3 p-8 md:p-12 bg-gray-800/80 relative">
-                        <template x-for="tab in content.dashboard.tabs" :key="tab.id">
-                            <div x-show="activeTab === tab.id" x-transition.opacity class="animate-fade-in">
-                                <div class="aspect-video w-full rounded-2xl overflow-hidden mb-8 shadow-lg border border-gray-700">
-                                    <img :src="tab.image" :alt="tab.label" class="w-full h-full object-cover">
-                                </div>
-                                <h3 class="text-2xl md:text-3xl font-bold mb-4 text-white" x-text="tab.title"></h3>
-                                <p class="text-gray-300 leading-relaxed mb-8 text-base md:text-lg" x-text="tab.description"></p>
-                                
-                                <div class="space-y-6">
-                                    <template x-for="feat in tab.features" :key="feat.title">
-                                        <div class="border-l-2 border-brand pl-6">
-                                            <h4 class="text-lg md:text-xl font-semibold text-white mb-2" x-text="feat.title"></h4>
-                                            <p class="text-gray-400 text-sm leading-relaxed" x-text="feat.desc"></p>
+                    <!-- Mobile Next Button -->
+                    <button type="button"
+                            @click="nextCard()" 
+                            :disabled="totalItems <= 1"
+                            aria-label="Next card"
+                            class="md:hidden w-11 h-11 rounded-full flex items-center justify-center bg-white/80 backdrop-blur-md border border-gray-200/80 shadow-card active:scale-95 transition-all text-gray-800 disabled:opacity-40 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-brand cursor-pointer">
+                        <svg class="w-5 h-5 translate-x-0.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slider 2: Programming Slider (Dark) with Card Fan Animation per silde.md -->
+    <section class="py-24 bg-gray-900 overflow-hidden border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest bg-brand/30 px-3.5 py-1.5 rounded-full inline-block mb-3">Execution Roadmap</span>
+                <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight mb-4" x-text="content.programmingSlider.title"></h2>
+                <p class="text-gray-400 text-sm md:text-base max-w-2xl mx-auto">
+                    Interactive physical card deck fan — hover cards to pull them from the deck, or use controls/touch to navigate through each programming stage.
+                </p>
+            </div>
+            
+            <!-- Card Fan Animation Component (Dark Theme) -->
+            <div x-data="cardFanSlider({
+                items: content.programmingSlider.slides,
+                theme: 'dark'
+            })" 
+            @keydown.left.prevent="previousCard()"
+            @keydown.right.prevent="nextCard()"
+            @keydown.home.prevent="selectCard(0)"
+            @keydown.end.prevent="selectCard(totalItems - 1)"
+            tabindex="0"
+            role="region"
+            aria-label="Interactive Card Fan Carousel"
+            class="relative w-full select-none focus:outline-none">
+                
+                <!-- Stage and Desktop Arrows Wrapper -->
+                <div class="relative w-full flex items-center justify-center">
+                    
+                    <!-- Desktop Previous Button (Left of Card Fan) -->
+                    <button type="button"
+                            @click="previousCard()"
+                            :disabled="totalItems <= 1"
+                            aria-label="Previous card"
+                            class="hidden md:flex absolute left-2 lg:left-6 xl:left-8 top-1/2 -translate-y-1/2 z-50 w-12 h-12 rounded-full items-center justify-center bg-gray-800/80 backdrop-blur-md border border-gray-700/80 shadow-card hover:shadow-elevated hover:scale-105 active:scale-95 transition-all text-white disabled:opacity-40 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-emerald-400 cursor-pointer">
+                        <svg class="w-5 h-5 -translate-x-0.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+
+                    <!-- Fan Stage Container -->
+                    <div @mouseleave="onStageLeave()"
+                         @touchstart="onTouchStart($event)"
+                         @touchend="onTouchEnd($event)"
+                         class="relative mx-auto w-full h-[480px] sm:h-[520px] md:h-[560px] lg:h-[580px] flex items-center justify-center overflow-visible">
+                        
+                        <!-- Center Anchor Point -->
+                        <div class="relative w-0 h-0 flex items-center justify-center">
+                            <template x-for="(item, index) in items" :key="index">
+                                <div :data-index="index"
+                                     @mouseenter="onCardHover(index)"
+                                     @mouseleave="onCardLeave(index)"
+                                     @click="selectCard(index)"
+                                     class="card-fan-item absolute left-0 top-0 w-[280px] sm:w-[320px] md:w-[350px] lg:w-[380px] rounded-[2rem] overflow-hidden shadow-elevated border border-gray-700/80 bg-gray-800 text-white cursor-pointer will-change-transform select-none">
+                                    
+                                    <div class="relative aspect-[16/10] overflow-hidden bg-gray-900">
+                                        <img :src="item.image" :alt="item.title" class="w-full h-full object-cover pointer-events-none">
+                                        <span class="absolute top-4 left-4 bg-emerald-500 text-gray-950 text-xs font-bold px-3 py-1 rounded-full shadow-md backdrop-blur-md"
+                                              x-text="item.step"></span>
+                                    </div>
+
+                                    <div class="p-6 md:p-8 flex flex-col justify-between">
+                                        <h3 class="font-bold text-lg md:text-xl leading-snug mb-3 tracking-tight text-white" x-text="item.title"></h3>
+                                        
+                                        <ul class="space-y-2 mb-4 text-xs md:text-sm text-gray-300">
+                                            <template x-for="(pt, idx) in (item.points || []).slice(0, 2)" :key="idx">
+                                                <li class="flex items-start gap-2 line-clamp-2">
+                                                    <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-1.5 flex-shrink-0"></span>
+                                                    <span x-text="pt"></span>
+                                                </li>
+                                            </template>
+                                        </ul>
+                                        
+                                        <div class="pt-3 border-t border-gray-700 flex items-center justify-between">
+                                            <span class="text-xs font-bold uppercase tracking-widest text-emerald-400 inline-flex items-center gap-1">
+                                                View Roadmap <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                            </span>
+                                            <span class="text-[11px] font-semibold text-gray-400" x-text="`${index + 1} / ${totalItems}`"></span>
                                         </div>
-                                    </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Desktop Next Button (Right of Card Fan) -->
+                    <button type="button"
+                            @click="nextCard()"
+                            :disabled="totalItems <= 1"
+                            aria-label="Next card"
+                            class="hidden md:flex absolute right-2 lg:right-6 xl:right-8 top-1/2 -translate-y-1/2 z-50 w-12 h-12 rounded-full items-center justify-center bg-gray-800/80 backdrop-blur-md border border-gray-700/80 shadow-card hover:shadow-elevated hover:scale-105 active:scale-95 transition-all text-white disabled:opacity-40 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-emerald-400 cursor-pointer">
+                        <svg class="w-5 h-5 translate-x-0.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Navigation Controls (Mobile Arrows + Indicators) -->
+                <div class="flex items-center justify-center gap-4 mt-8">
+                    <!-- Mobile Previous Button -->
+                    <button type="button"
+                            @click="previousCard()" 
+                            :disabled="totalItems <= 1"
+                            aria-label="Previous card"
+                            class="md:hidden w-11 h-11 rounded-full flex items-center justify-center bg-gray-800/80 backdrop-blur-md border border-gray-700/80 shadow-card active:scale-95 transition-all text-white disabled:opacity-40 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-emerald-400 cursor-pointer">
+                        <svg class="w-5 h-5 -translate-x-0.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+
+                    <!-- Indicators -->
+                    <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/10">
+                        <template x-for="(item, idx) in items" :key="idx">
+                            <button @click="selectCard(idx)" 
+                                    :aria-label="`Card ${idx + 1}`"
+                                    class="h-2.5 rounded-full transition-all duration-300 focus:outline-none"
+                                    :class="selectedIndex === idx ? 'w-8 bg-emerald-400' : 'w-2.5 bg-gray-600 hover:bg-gray-500'"></button>
+                        </template>
+                    </div>
+
+                    <!-- Mobile Next Button -->
+                    <button type="button"
+                            @click="nextCard()" 
+                            :disabled="totalItems <= 1"
+                            aria-label="Next card"
+                            class="md:hidden w-11 h-11 rounded-full flex items-center justify-center bg-gray-800/80 backdrop-blur-md border border-gray-700/80 shadow-card active:scale-95 transition-all text-white disabled:opacity-40 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-emerald-400 cursor-pointer">
+                        <svg class="w-5 h-5 translate-x-0.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose IP3 Section -->
+    <section id="why-choose" class="py-24 bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-4">Our Advantage</span>
+                    <h2 class="text-3xl md:text-5xl font-bold mb-10 text-gray-900 tracking-tight" x-text="content.whyChoose.title"></h2>
+                    <div class="space-y-8">
+                        <template x-for="item in content.whyChoose.items" :key="item.title">
+                            <div class="flex items-start gap-5">
+                                <div class="w-14 h-14 rounded-2xl bg-brand/10 flex items-center justify-center flex-shrink-0 mt-1 text-brand">
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl md:text-2xl font-bold mb-2 text-gray-900" x-text="item.title"></h3>
+                                    <p class="text-gray-600 leading-relaxed text-base" x-text="item.desc"></p>
                                 </div>
                             </div>
                         </template>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- Influence Hero Banner -->
-        <section class="bg-gradient-to-br from-brand via-brand-dark to-gray-900 text-white py-24">
-            <div class="max-w-5xl mx-auto px-6 text-center">
-                <span class="text-xs font-bold text-green-200 uppercase tracking-widest bg-white/10 px-3.5 py-1.5 rounded-full inline-block mb-4">Global Dialogue</span>
-                <h2 class="text-3xl md:text-5xl font-bold mb-3 tracking-tight" x-text="content.influenceIntro.title"></h2>
-                <p class="text-lg md:text-xl font-medium uppercase tracking-wide text-green-200 mb-10 opacity-90" x-text="content.influenceIntro.subtitle"></p>
-                
-                <div class="aspect-video w-full max-w-3xl mx-auto bg-gray-900 rounded-[2rem] overflow-hidden shadow-elevated mb-10 border border-white/15">
-                    <img :src="content.influenceIntro.image" class="w-full h-full object-cover" alt="Conference">
-                </div>
-
-                <p class="text-base md:text-lg leading-relaxed text-green-50 px-6 max-w-4xl mx-auto" x-text="content.influenceIntro.description"></p>
-            </div>
-        </section>
-
-        <!-- Slider 1: Influence Slider (Light) -->
-        <section class="py-24 bg-gray-50 border-b border-gray-200/70 overflow-hidden">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="text-center mb-16">
-                    <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Policy In Action</span>
-                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-gray-900" x-text="content.influenceSlider.title"></h2>
-                </div>
-                
-                <div x-data="{ currentSlide: 0 }" class="relative">
-                    <div class="overflow-hidden rounded-[2rem] shadow-card border border-gray-200/80 bg-white">
-                        <div class="flex transition-transform duration-500 ease-in-out" :style="`transform: translateX(-${currentSlide * 100}%)`">
-                            
-                            <template x-for="slide in content.influenceSlider.slides" :key="slide.step">
-                                <div class="w-full flex-shrink-0 flex flex-col md:flex-row bg-white text-gray-900">
-                                    <div class="md:w-1/2 relative min-h-[380px]">
-                                        <img :src="slide.image" class="w-full h-full object-cover">
-                                    </div>
-                                    <div class="md:w-1/2 p-8 md:p-14 flex flex-col justify-center">
-                                        <div class="text-brand font-bold mb-2 tracking-widest text-xs uppercase" x-text="slide.step"></div>
-                                        <h3 class="text-2xl md:text-3xl font-bold mb-6 tracking-tight text-gray-900" x-text="slide.title"></h3>
-                                        <ul class="space-y-4">
-                                            <template x-for="pt in slide.points" :key="pt">
-                                                <li class="flex items-start">
-                                                    <span class="w-2 h-2 bg-brand rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                                                    <span class="text-base text-gray-600 leading-relaxed" x-text="pt"></span>
-                                                </li>
-                                            </template>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </template>
-
-                        </div>
-                    </div>
-
-                    <!-- Controls -->
-                    <div class="flex justify-center items-center gap-4 mt-8">
-                        <button @click="currentSlide = currentSlide > 0 ? currentSlide - 1 : content.influenceSlider.slides.length - 1" 
-                                class="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-md border border-gray-200 hover:bg-gray-50 text-gray-800 transition"
-                                aria-label="Previous Slide">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                        </button>
-                        
-                        <div class="flex items-center gap-2">
-                            <template x-for="(s, index) in content.influenceSlider.slides" :key="index">
-                                <button @click="currentSlide = index" 
-                                        :class="currentSlide === index ? 'w-7 bg-brand' : 'w-2.5 bg-gray-300 hover:bg-gray-400'" 
-                                        class="h-2.5 rounded-full transition-all duration-300 focus:outline-none"
-                                        :aria-label="`Go to slide ${index + 1}`"></button>
-                            </template>
-                        </div>
-
-                        <button @click="currentSlide = currentSlide < content.influenceSlider.slides.length - 1 ? currentSlide + 1 : 0" 
-                                class="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-md border border-gray-200 hover:bg-gray-50 text-gray-800 transition"
-                                aria-label="Next Slide">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        </button>
+                <div class="relative">
+                    <div class="aspect-[4/3] lg:aspect-[3/4] bg-gray-100 rounded-[2rem] overflow-hidden shadow-card border border-gray-100">
+                        <img :src="content.whyChoose.image" class="w-full h-full object-cover card-hover">
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Slider 2: Programming Slider (Dark) -->
-        <section class="py-24 bg-gray-900 overflow-hidden">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="text-center mb-16">
-                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest bg-brand/30 px-3.5 py-1.5 rounded-full inline-block mb-3">Execution Roadmap</span>
-                    <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight" x-text="content.programmingSlider.title"></h2>
-                </div>
-                
-                <div x-data="{ programSlide: 0 }" class="relative">
-                    <div class="overflow-hidden rounded-[2rem] shadow-elevated border border-gray-800 bg-gray-800">
-                        <div class="flex transition-transform duration-500 ease-in-out" :style="`transform: translateX(-${programSlide * 100}%)`">
-                            
-                            <template x-for="slide in content.programmingSlider.slides" :key="slide.step">
-                                <div class="w-full flex-shrink-0 flex flex-col md:flex-row bg-gray-800 text-white">
-                                    <div class="md:w-1/2 relative min-h-[380px]">
-                                        <img :src="slide.image" class="w-full h-full object-cover">
-                                    </div>
-                                    <div class="md:w-1/2 p-8 md:p-14 flex flex-col justify-center">
-                                        <div class="text-emerald-400 font-bold mb-2 tracking-widest text-xs uppercase" x-text="slide.step"></div>
-                                        <h3 class="text-2xl md:text-3xl font-bold mb-6 text-white tracking-tight" x-text="slide.title"></h3>
-                                        <ul class="space-y-4">
-                                            <template x-for="pt in slide.points" :key="pt">
-                                                <li class="flex items-start">
-                                                    <span class="w-2 h-2 bg-emerald-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                                                    <span class="text-base text-gray-300 leading-relaxed" x-text="pt"></span>
-                                                </li>
-                                            </template>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </template>
+    <!-- CALL TO ACTION / PARTNER WITH US -->
+    <section id="contact" class="bg-gray-900 text-white py-24 px-6 text-center relative overflow-hidden border-b border-gray-800">
+        <div class="absolute -top-24 -left-24 w-80 h-80 bg-brand/15 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-24 -right-24 w-80 h-80 bg-brand/15 rounded-full blur-3xl"></div>
 
-                        </div>
-                    </div>
-
-                    <!-- Controls -->
-                    <div class="flex justify-center items-center gap-4 mt-8">
-                        <button @click="programSlide = programSlide > 0 ? programSlide - 1 : content.programmingSlider.slides.length - 1" 
-                                class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-white transition border border-gray-700 shadow-md"
-                                aria-label="Previous Slide">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                        </button>
-                        
-                        <div class="flex items-center gap-2">
-                            <template x-for="(s, index) in content.programmingSlider.slides" :key="index">
-                                <button @click="programSlide = index" 
-                                        :class="programSlide === index ? 'w-7 bg-brand' : 'w-2.5 bg-gray-700 hover:bg-gray-600'" 
-                                        class="h-2.5 rounded-full transition-all duration-300 focus:outline-none"
-                                        :aria-label="`Go to slide ${index + 1}`"></button>
-                            </template>
-                        </div>
-
-                        <button @click="programSlide = programSlide < content.programmingSlider.slides.length - 1 ? programSlide + 1 : 0" 
-                                class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-white transition border border-gray-700 shadow-md"
-                                aria-label="Next Slide">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        </button>
-                    </div>
-                </div>
+        <div class="max-w-3xl mx-auto relative z-10">
+            <span class="text-xs font-bold text-green-300 uppercase tracking-widest bg-white/10 px-3.5 py-1.5 rounded-full inline-block mb-4 border border-white/10">Next Steps</span>
+            <h2 class="text-3xl md:text-5xl font-bold mb-6 text-white tracking-tight">Partner with Us for <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-300 to-teal-200">Policy Innovation</span></h2>
+            <p class="mb-6 text-gray-300 text-base md:text-lg leading-relaxed">Turn evidence into impact with cutting-edge policy methodologies and action research. At IP3 Consulting, we empower governments, development partners, and leaders to achieve lasting systemic change.</p>
+            <p class="font-semibold text-emerald-300 mb-8 text-base md:text-lg">Together, we build forward-thinking policies for sustainable growth.</p>
+            <div>
+                <a href="#dashboard" class="inline-flex items-center justify-center px-8 py-3.5 bg-brand text-white text-base font-semibold rounded-full hover:bg-brand-dark transition-all duration-200 shadow-elevated hover:scale-105">
+                    Connect With Our Policy Team
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </a>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Why Choose IP3 Section -->
-        <section class="py-24 bg-white">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="grid lg:grid-cols-2 gap-16 items-center">
-                    <div>
-                        <span class="text-xs font-bold text-brand uppercase tracking-widest bg-brand/10 px-3.5 py-1.5 rounded-full inline-block mb-4">Our Advantage</span>
-                        <h2 class="text-3xl md:text-5xl font-bold mb-10 text-gray-900 tracking-tight" x-text="content.whyChoose.title"></h2>
-                        <div class="space-y-8">
-                            <template x-for="item in content.whyChoose.items" :key="item.title">
-                                <div class="flex items-start gap-5">
-                                    <div class="w-14 h-14 rounded-2xl bg-brand/10 flex items-center justify-center flex-shrink-0 mt-1 text-brand">
-                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-xl md:text-2xl font-bold mb-2 text-gray-900" x-text="item.title"></h3>
-                                        <p class="text-gray-600 leading-relaxed text-base" x-text="item.desc"></p>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-                    <div class="relative">
-                        <div class="aspect-[4/3] lg:aspect-[3/4] bg-gray-100 rounded-[2rem] overflow-hidden shadow-card border border-gray-100">
-                            <img :src="content.whyChoose.image" class="w-full h-full object-cover card-hover">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <!-- Standardized Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 py-12 text-center text-gray-400 text-sm">
+        <div class="max-w-7xl mx-auto px-6">
+            <p class="mb-2">© 2026 IP3 Consulting Limited — Institute for Public Policy and Practice. All rights reserved.</p>
+            <p class="text-gray-400 text-sm">
+                <span>Public Policy Innovation &amp; Action Research</span> | 
+                <a href="https://www.ip3-bd.org" class="text-green-400 hover:text-white transition">www.ip3-bd.org</a>
+            </p>
+        </div>
+    </footer>
 
-        <!-- Standardized Footer -->
-        <footer class="bg-gray-950 border-t border-gray-800 py-12 text-center text-gray-400 text-sm">
-            <div class="max-w-7xl mx-auto px-6">
-                <p class="text-gray-400 text-sm mb-2" x-text="content.footer.copyright"></p>
-                <p class="text-gray-400 text-sm">
-                    <span x-text="content.footer.tagline"></span> | 
-                    <a :href="content.footer.url" class="text-green-400 hover:text-white transition" x-text="content.footer.urlText"></a>
-                </p>
-            </div>
-        </footer>
-
-    </div>
 </body>
 </html>
